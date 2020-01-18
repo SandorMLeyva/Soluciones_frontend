@@ -60,8 +60,8 @@ export default function CustomInput(props) {
         <Select
           classes={{
             root: marginTop,
-            disabled: classes.disabled,
-            underline: underlineClasses
+            // disabled: classes.disabled,
+            // underline: underlineClasses
           }}
           id={id}
           {...inputProps}
