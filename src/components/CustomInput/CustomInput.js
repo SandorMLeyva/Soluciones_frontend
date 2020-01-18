@@ -6,6 +6,8 @@ import { makeStyles } from "@material-ui/core/styles";
 import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
 import Input from "@material-ui/core/Input";
+import Select from "@material-ui/core/Select";
+
 // @material-ui/icons
 import Clear from "@material-ui/icons/Clear";
 import Check from "@material-ui/icons/Check";
@@ -23,7 +25,8 @@ export default function CustomInput(props) {
     labelProps,
     inputProps,
     error,
-    success
+    success,
+    select
   } = props;
 
   const labelClasses = classNames({
@@ -52,15 +55,33 @@ export default function CustomInput(props) {
           {labelText}
         </InputLabel>
       ) : null}
-      <Input
-        classes={{
-          root: marginTop,
-          disabled: classes.disabled,
-          underline: underlineClasses
-        }}
-        id={id}
-        {...inputProps}
-      />
+      {select ? (
+        
+        <Select
+          classes={{
+            root: marginTop,
+            disabled: classes.disabled,
+            underline: underlineClasses
+          }}
+          id={id}
+          {...inputProps}
+          // native={true} 
+
+          >
+          {props.children}
+        </Select>
+      ) :
+        (<Input
+          classes={{
+            root: marginTop,
+            disabled: classes.disabled,
+            underline: underlineClasses
+          }}
+          id={id}
+          {...inputProps}
+        />)
+      }
+
       {error ? (
         <Clear className={classes.feedback + " " + classes.labelRootError} />
       ) : success ? (
@@ -77,5 +98,6 @@ CustomInput.propTypes = {
   inputProps: PropTypes.object,
   formControlProps: PropTypes.object,
   error: PropTypes.bool,
-  success: PropTypes.bool
+  success: PropTypes.bool,
+  select: PropTypes.bool
 };
