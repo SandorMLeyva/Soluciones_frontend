@@ -55,13 +55,13 @@ export default class FormHardware extends Component {
         this.handleName = this.handleName.bind(this);
         this.handleModel = this.handleModel.bind(this);
         this.handlePrice = this.handlePrice.bind(this);
-        this.handleType = this.handleType.bind(this);
+        this.handleCount = this.handleCount.bind(this);
         this.handleMinCount = this.handleMinCount.bind(this);
     }
 
 
 
-    handleType(count) {
+    handleCount(count) {
         this.setState({
             count: count
         })
@@ -133,7 +133,8 @@ export default class FormHardware extends Component {
                                 }}
                                 inputProps={{
                                     value: this.state.count,
-                                    onChange: (e) => this.handleType(e.target.value)
+                                    onChange: (e) => this.handleCount(e.target.value),
+                                    type: "number"
                                 }}
 
                             />
@@ -147,8 +148,9 @@ export default class FormHardware extends Component {
                                     fullWidth: true
                                 }}
                                 inputProps={{
-                                    value: this.state.count,
-                                    onChange: (e) => this.handleMinCount(e.target.value)
+                                    value: this.state.min_count,
+                                    onChange: (e) => this.handleMinCount(e.target.value),
+                                    type: "number"
                                 }}
 
                             />
@@ -162,7 +164,8 @@ export default class FormHardware extends Component {
                                 }}
                                 inputProps={{
                                     value: this.state.price,
-                                    onChange: (e) => this.handlePrice(e.target.value)
+                                    onChange: (e) => this.handlePrice(e.target.value),
+                                    type: "number"
                                 }}
                             />
                         </GridItem>
