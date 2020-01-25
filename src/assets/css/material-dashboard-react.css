@@ -169,6 +169,14 @@ select::-moz-focus-inner,
 input[type="file"] > input[type="button"]::-moz-focus-inner {
   outline: 0 !important;
 }
+input,.rc-time-picker-input{
+  border: none;
+  border-bottom: 1px solid #d2d2d2;
+  text-align: center;
+  color: black;
+  font-size: medium;
+  
+}
 
 legend {
   margin-bottom: 20px;
