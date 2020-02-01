@@ -47,32 +47,48 @@ const dashboardRoutes = [
   },
   {
     path: "/user",
-    name: "User Profile",
-    rtlName: "ملف تعريفي للمستخدم",
+    name: "Trabajos en el Taller",
+    // rtlName: "sd",
     icon: Person,
     component: UserProfile,
     layout: "/admin"
   },
   {
-    path: "/table",
-    name: "Table List",
-    rtlName: "قائمة الجدول",
+    path: "/user",
+    name: "Trabajos en la Calle",
+    // rtlName: "sd",
+    icon: Person,
+    component: UserProfile,
+    layout: "/admin"
+  },
+  {
+    path: "/almacen",
+    name: "Almacen",
+    // rtlName: "قائمة الجدول",
     icon: "content_paste",
     component: TableList,
     layout: "/admin"
   },
   {
-    path: "/typography",
-    name: "Typography",
-    rtlName: "طباعة",
+    path: "/estadisticas",
+    name: "Estadísticas",
+    // rtlName: "طباعة",
     icon: LibraryBooks,
     component: Typography,
     layout: "/admin"
   },
   {
-    path: "/icons",
-    name: "Icons",
-    rtlName: "الرموز",
+    path: "/cuentas",
+    name: "Cuentas",
+    // rtlName: "طباعة",
+    icon: LibraryBooks,
+    component: Typography,
+    layout: "/admin"
+  },
+  {
+    path: "/clientes",
+    name: "Clientes",
+    // rtlName: "الرموز",
     icon: BubbleChart,
     component: Icons,
     layout: "/admin"
