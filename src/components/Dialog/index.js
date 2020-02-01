@@ -14,7 +14,7 @@ export default function SimpleDialog(props) {
 }
 
 SimpleDialog.propTypes = {
-    title: PropTypes.string.isRequired,
+    title: PropTypes.string,
     open: PropTypes.bool.isRequired,
     ChildComponent: PropTypes.any.isRequired,
     childProps: PropTypes.any.isRequired

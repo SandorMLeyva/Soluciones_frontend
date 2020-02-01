@@ -29,16 +29,18 @@ import CardIcon from "components/Card/CardIcon.js";
 import CardBody from "components/Card/CardBody.js";
 import CardFooter from "components/Card/CardFooter.js";
 
-import { bugs, website, server } from "variables/general.js";
 
-import {
-  dailySalesChart,
-  emailsSubscriptionChart,
-  completedTasksChart
-} from "variables/charts.js";
 
 import styles from "assets/jss/material-dashboard-react/views/dashboardStyle.js";
-import Chart from "../../components/Charts";
+import Chart from "components/Charts";
+import FormClient from "containers/FormClient";
+import FormHardware from "containers/FormHardware";
+import FormEntry from "containers/FormEntry";
+import FormPiece from "containers/FormPiece";
+import FormService from "containers/FormService";
+import FormFix from "containers/FormFix";
+import FormRoadService from "containers/FormRoadService";
+import FormRoadEntry from "containers/FormRoadEntry";
 
 const useStyles = makeStyles(styles);
 
@@ -46,16 +48,14 @@ export default function Dashboard() {
   const classes = useStyles();
   return (
     <div>
-      {/* <GridContainer>
-        
-      </GridContainer> */}
+
       <GridContainer>
         <GridItem xs={12} sm={12} md={4}>
           <Card chart>
             <CardHeader color="success">
             </CardHeader>
             <CardBody>
-              <Chart doughnut x={[1,2,3,4]} y={['sand','mar','tin','ley']}/>
+              <Chart doughnut x={[1, 2, 3, 4]} y={['sand', 'mar', 'tin', 'ley']} />
             </CardBody>
           </Card>
         </GridItem>
@@ -64,7 +64,7 @@ export default function Dashboard() {
             <CardHeader color="warning">
             </CardHeader>
             <CardBody>
-              <Chart poly x={[1,2,3,4]} y={['sand','mar','tin','ley']}/>
+              <Chart poly x={[1, 2, 3, 4]} y={['sand', 'mar', 'tin', 'ley']} />
             </CardBody>
           </Card>
         </GridItem>
@@ -73,12 +73,54 @@ export default function Dashboard() {
             <CardHeader color="danger">
             </CardHeader>
             <CardBody>
-              <Chart bar x={[1,2,3,4]} y={['sand','mar','tin','ley']} />
+              <Chart bar x={[1, 2, 3, 4]} y={['sand', 'mar', 'tin', 'ley']} />
             </CardBody>
           </Card>
         </GridItem>
       </GridContainer>
-      
+
+      <GridContainer>
+        <GridItem xs={12} sm={12} md={12}>
+          <FormClient />
+        </GridItem>
+      </GridContainer>
+      <GridContainer>
+        <GridItem xs={12} sm={12} md={12}>
+          <FormHardware />
+        </GridItem>
+      </GridContainer>
+      <GridContainer>
+        <GridItem xs={12} sm={12} md={12}>
+          <FormEntry />
+        </GridItem>
+      </GridContainer>
+      <GridContainer>
+        <GridItem xs={12} sm={12} md={12}>
+          <FormPiece />
+        </GridItem>
+      </GridContainer>
+      <GridContainer>
+        <GridItem xs={12} sm={12} md={12}>
+          <FormService />
+        </GridItem>
+      </GridContainer>
+      <GridContainer>
+        <GridItem xs={12} sm={12} md={12}>
+          <FormFix />
+        </GridItem>
+      </GridContainer>
+      <GridContainer>
+        <GridItem xs={12} sm={12} md={12}>
+          <FormRoadService />
+        </GridItem>
+      </GridContainer>
+      <GridContainer>
+        <GridItem xs={12} sm={12} md={12}>
+          <FormRoadEntry/>
+        </GridItem>
+      </GridContainer>
+
+
     </div>
   );
 }

@@ -105,6 +105,7 @@ export default function TableList() {
               ]}
             />
           </CardBody>
+         
         </Card>
       </GridItem>
     </GridContainer>

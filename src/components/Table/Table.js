@@ -18,6 +18,9 @@ import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 
+import Dialog from 'components/Dialog';
+import Ask from 'components/YesOrNot';
+
 // core components
 import styles from "assets/jss/material-dashboard-react/components/tableStyle.js";
 
@@ -60,24 +63,24 @@ function TablePaginationActions(props) {
       <IconButton
         onClick={handleFirstPageButtonClick}
         disabled={page === 0}
-        aria-label="first page"
+        aria-label="primera página"
       >
         <FirstPageIcon />
       </IconButton>
-      <IconButton onClick={handleBackButtonClick} disabled={page === 0} aria-label="previous page">
+      <IconButton onClick={handleBackButtonClick} disabled={page === 0} aria-label="página anterior">
         <KeyboardArrowLeft />
       </IconButton>
       <IconButton
         onClick={handleNextButtonClick}
         disabled={page >= Math.ceil(count / rowsPerPage) - 1}
-        aria-label="next page"
+        aria-label="página siguiente"
       >
         <KeyboardArrowRight />
       </IconButton>
       <IconButton
         onClick={handleLastPageButtonClick}
         disabled={page >= Math.ceil(count / rowsPerPage) - 1}
-        aria-label="last page"
+        aria-label="última página"
       >
         <LastPageIcon />
       </IconButton>
@@ -96,6 +99,8 @@ TablePaginationActions.propTypes = {
 export default function CustomTable(props) {
   const classes = useStyles();
   const { tableHead, tableData, tableHeaderColor, editable } = props;
+  const [openDialog, setOpenDialog] = React.useState(false);
+  const [openDeleteDialog, setOpenDeleteDialog] = React.useState(false);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [rows, setRows] = React.useState(tableData.slice(page, rowsPerPage));
@@ -149,12 +154,37 @@ export default function CustomTable(props) {
                 })}
                 {editable &&
                   <TableCell className={classes.tableCell}>
-                    <IconButton aria-label="delete" className={classes.margin}>
+                    <IconButton
+                      aria-label="delete"
+                      className={classes.margin}
+                      onClick={() => setOpenDialog(true)}
+                    >
                       <EditIcon fontSize="small" />
                     </IconButton>
-                    <IconButton aria-label="delete" color="secondary" className={classes.margin} >
+                    <Dialog
+                      open={openDialog}
+                      onClose={() => setOpenDialog(false)}
+                      ChildComponent={Ask}
+                      
+                    />
+                    <IconButton
+                      aria-label="delete"
+                      color="secondary"
+                      className={classes.margin}
+                      onClick={() => setOpenDeleteDialog(true)}
+                    >
                       <DeleteIcon fontSize="small" />
                     </IconButton>
+                    <Dialog
+                      open={openDeleteDialog}
+                      onClose={() => setOpenDeleteDialog(false)}
+                      title={`Eliminar ${prop[tableHead[0].id]}`}
+                      ChildComponent={Ask}
+                      childProps={{
+                        onYesClick: ()=> setOpenDeleteDialog(false),
+                        onNoClick: ()=> setOpenDeleteDialog(false)
+                      }}
+                    />
                   </TableCell>}
               </TableRow>
             );
@@ -196,8 +226,8 @@ CustomTable.propTypes = {
     "rose",
     "gray"
   ]),
-  tableHead: PropTypes.arrayOf(PropTypes.string),
-  tableData: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.string)),
+  tableHead: PropTypes.array,
+  tableData: PropTypes.array,
   editable: PropTypes.bool,
   onDeleteRow: PropTypes.func,
   onEditRow: PropTypes.func,
