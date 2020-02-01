@@ -98,27 +98,47 @@ TablePaginationActions.propTypes = {
 
 export default function CustomTable(props) {
   const classes = useStyles();
-  const { tableHead, tableData, tableHeaderColor, editable } = props;
+  const { tableHead, tableData, tableHeaderColor, editable, editForm } = props;
   const [openDialog, setOpenDialog] = React.useState(false);
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(false);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [update, setUpdate] = React.useState({});
   const [rows, setRows] = React.useState(tableData.slice(page, rowsPerPage));
-  const emptyRows = rowsPerPage - Math.min(rowsPerPage, tableData.length - page * rowsPerPage);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
-    console.log(newPage, rowsPerPage);
-    console.log(newPage * rowsPerPage, newPage * rowsPerPage + rowsPerPage);
     setRows(tableData.slice(newPage * rowsPerPage, newPage * rowsPerPage + rowsPerPage));
   };
-
   const handleChangeRowsPerPage = event => {
     let value = parseInt(event.target.value, 10);
     setRowsPerPage(value);
     setPage(0);
     setRows(tableData.slice(0, value));
   };
+  const handleOpenDialog = (object) => {
+    setOpenDialog(true);
+    setUpdate(object);
+  };
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
+  };
+  const handleOpenDeleteDialog = (object) => {
+    setOpenDeleteDialog(true);
+    setUpdate(object);
+  };
+  const handleCloseDeleteDialog = () => {
+    setOpenDeleteDialog(false);
+  };
+  const handleYesClick = () => {
+    setOpenDeleteDialog(false);
+  }
+  const handleNoClick = () => {
+    setOpenDeleteDialog(false);
+  }
+  const handleSave = () => {
+    setOpenDialog(false);
+  }
 
   return (
     <div className={classes.tableResponsive}>
@@ -157,34 +177,18 @@ export default function CustomTable(props) {
                     <IconButton
                       aria-label="delete"
                       className={classes.margin}
-                      onClick={() => setOpenDialog(true)}
+                      onClick={() => handleOpenDialog(prop)}
                     >
                       <EditIcon fontSize="small" />
                     </IconButton>
-                    <Dialog
-                      open={openDialog}
-                      onClose={() => setOpenDialog(false)}
-                      ChildComponent={Ask}
-                      
-                    />
                     <IconButton
                       aria-label="delete"
                       color="secondary"
                       className={classes.margin}
-                      onClick={() => setOpenDeleteDialog(true)}
+                      onClick={() => handleOpenDeleteDialog(prop)}
                     >
                       <DeleteIcon fontSize="small" />
                     </IconButton>
-                    <Dialog
-                      open={openDeleteDialog}
-                      onClose={() => setOpenDeleteDialog(false)}
-                      title={`Eliminar ${prop[tableHead[0].id]}`}
-                      ChildComponent={Ask}
-                      childProps={{
-                        onYesClick: ()=> setOpenDeleteDialog(false),
-                        onNoClick: ()=> setOpenDeleteDialog(false)
-                      }}
-                    />
                   </TableCell>}
               </TableRow>
             );
@@ -208,6 +212,25 @@ export default function CustomTable(props) {
           </TableRow>
         </TableFooter>
       </Table>
+      <Dialog
+        open={openDialog}
+        onClose={handleCloseDialog}
+        ChildComponent={editForm}
+        childProps={{
+          onSave: handleSave,
+          update: update
+        }}
+      />
+      <Dialog
+        open={openDeleteDialog}
+        onClose={handleCloseDeleteDialog}
+        title={`Eliminar ${update}`}
+        ChildComponent={Ask}
+        childProps={{
+          onYesClick: handleYesClick,
+          onNoClick: handleNoClick
+        }}
+      />
     </div>
   );
 }

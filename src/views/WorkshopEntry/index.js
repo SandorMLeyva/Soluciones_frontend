@@ -8,6 +8,7 @@ import Table from "components/Table/Table.js";
 import Card from "components/Card/Card.js";
 import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
+import FormEntry from "containers/FormEntry";
 
 const styles = {
     cardCategoryWhite: {
@@ -51,7 +52,7 @@ export default function TableList() {
                         <h4 className={classes.cardTitleWhite}>Trabajos en el taller</h4>
                         <p className={classes.cardCategoryWhite}>
                             Listado de trabajos pendientes
-            </p>
+                        </p>
                     </CardHeader>
                     <CardBody>
                         <Table
@@ -81,9 +82,87 @@ export default function TableList() {
                                     phone: "52580801",
                                     hardware: 'Monitor AOC 22"',
                                     date: "24-2-2020"
+                                },
+                                {
+                                    id: 2,
+                                    client: "Antonio Maceo Grajales",
+                                    phone: "52580801",
+                                    hardware: 'Monitor AOC 22"',
+                                    date: "24-2-2020"
+                                },
+                                {
+                                    id: 3,
+                                    client: "Jose Julian Marti Perez",
+                                    phone: "52580801",
+                                    hardware: 'Monitor AOC 22"',
+                                    date: "24-2-2020"
+                                },
+                                {
+                                    id: 1,
+                                    client: "Sándor Martín Leyva",
+                                    phone: "52580801",
+                                    hardware: 'Monitor AOC 22"',
+                                    date: "24-2-2020"
+                                },
+                                {
+                                    id: 2,
+                                    client: "Antonio Maceo Grajales",
+                                    phone: "52580801",
+                                    hardware: 'Monitor AOC 22"',
+                                    date: "24-2-2020"
+                                },
+                                {
+                                    id: 3,
+                                    client: "Jose Julian Marti Perez",
+                                    phone: "52580801",
+                                    hardware: 'Monitor AOC 22"',
+                                    date: "24-2-2020"
+                                },
+                                {
+                                    id: 1,
+                                    client: "Sándor Martín Leyva",
+                                    phone: "52580801",
+                                    hardware: 'Monitor AOC 22"',
+                                    date: "24-2-2020"
+                                },
+                                {
+                                    id: 2,
+                                    client: "Antonio Maceo Grajales",
+                                    phone: "52580801",
+                                    hardware: 'Monitor AOC 22"',
+                                    date: "24-2-2020"
+                                },
+                                {
+                                    id: 3,
+                                    client: "Jose Julian Marti Perez",
+                                    phone: "52580801",
+                                    hardware: 'Monitor AOC 22"',
+                                    date: "24-2-2020"
+                                },
+                                {
+                                    id: 1,
+                                    client: "Sándor Martín Leyva",
+                                    phone: "52580801",
+                                    hardware: 'Monitor AOC 22"',
+                                    date: "24-2-2020"
+                                },
+                                {
+                                    id: 2,
+                                    client: "Antonio Maceo Grajales",
+                                    phone: "52580801",
+                                    hardware: 'Monitor AOC 22"',
+                                    date: "24-2-2020"
+                                },
+                                {
+                                    id: 3,
+                                    client: "Jose Julian Marti Perez",
+                                    phone: "52580801",
+                                    hardware: 'Monitor AOC 22"',
+                                    date: "24-2-2020"
                                 }
                             ]}
                             editable={true}
+                            editForm={FormEntry}
                         />
                     </CardBody>
                 </Card>

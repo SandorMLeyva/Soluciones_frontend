@@ -109,9 +109,7 @@ export default class FormEntry extends Component {
                                     onChange: (e) => this.handlePhone(e.target.value)
                                 }}
                             />
-                        </GridItem>
-
-                      
+                        </GridItem>                      
                     </GridContainer>
 
                     <GridContainer>
@@ -133,7 +131,7 @@ export default class FormEntry extends Component {
                     </GridContainer>
                 </CardBody>
                 <CardFooter>
-                    <Button color="primary">Guardar</Button>
+                    <Button color="primary" onClick={this.props.onSave}>Guardar</Button>
                 </CardFooter>
             </Card>
         );
@@ -142,6 +140,7 @@ export default class FormEntry extends Component {
 
 FormEntry.propTypes = {
     update: PropTypes.object,
+    onSave: PropTypes.func
 };
 FormEntry.defaultProps = {
     update: false

@@ -22,4 +22,5 @@ SimpleDialog.propTypes = {
 
 SimpleDialog.defaultProps = {
     childProps: [],
+    title: ""
 }
