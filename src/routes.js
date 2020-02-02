@@ -28,6 +28,7 @@ import TableList from "views/TableList/TableList.js";
 import Typography from "views/Typography/Typography.js";
 import Icons from "views/Icons/Icons.js";
 import WorkshopEntry from "views/WorkshopEntry";
+import RoadEntry from "views/RoadEntry";
 import Maps from "views/Maps/Maps.js";
 import NotificationsPage from "views/Notifications/Notifications.js";
 // core components/views for RTL layout
@@ -51,7 +52,7 @@ const dashboardRoutes = [
     path: "trabajoscalle",
     name: "Trabajos en la Calle",
     icon: Person,
-    component: UserProfile,
+    component: RoadEntry,
     layout: "/"
   },
   {
