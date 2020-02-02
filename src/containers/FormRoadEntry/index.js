@@ -189,7 +189,7 @@ export default class FormRoadEntry extends Component {
 
                 </CardBody>
                 <CardFooter>
-                    <Button color="primary">Guardar</Button>
+                    <Button color="primary" onClick={() => this.props.onSave(this.state)}>Guardar</Button>
                 </CardFooter>
             </Card>
         );
@@ -197,7 +197,8 @@ export default class FormRoadEntry extends Component {
 }
 
 FormRoadEntry.propTypes = {
-    update: PropTypes.object,
+    update: PropTypes.any,
+    onSave: PropTypes.func
 };
 FormRoadEntry.defaultProps = {
     update: false
