@@ -18,6 +18,9 @@ import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 
+import Fab from '@material-ui/core/Fab';
+import AddIcon from '@material-ui/icons/Add';
+
 import Dialog from 'components/Dialog';
 import Ask from 'components/YesOrNot';
 
@@ -98,7 +101,8 @@ TablePaginationActions.propTypes = {
 
 export default function CustomTable(props) {
   const classes = useStyles();
-  const { tableHead, tableData, tableHeaderColor, editable, editForm } = props;
+  const { tableHead, tableData, tableHeaderColor, editable, editForm, add, onAddRow, onEditRow, onDeleteRow } = props;
+  const [openAddDialog, setOpenAddDialog] = React.useState(false);
   const [openDialog, setOpenDialog] = React.useState(false);
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(false);
   const [page, setPage] = React.useState(0);
@@ -132,16 +136,31 @@ export default function CustomTable(props) {
   };
   const handleYesClick = () => {
     setOpenDeleteDialog(false);
+    onDeleteRow();
   }
   const handleNoClick = () => {
     setOpenDeleteDialog(false);
   }
-  const handleSave = () => {
+  const handleUpdateSave = (object) => {
     setOpenDialog(false);
+    onEditRow(object);
+  }
+  const handleAddSave = (object) => {
+    setOpenAddDialog(false);
+    onAddRow(object);
+  }
+
+  const handleOpenAddDialog = () => {
+    setOpenAddDialog(true);
   }
 
   return (
     <div className={classes.tableResponsive}>
+      {add && <div style={{ position: 'absolute', right: ' 8vw', top: ' -15px', zIndex: '5' }}>
+        <Fab color="primary" aria-label="add" onClick={handleOpenAddDialog}>
+          <AddIcon />
+        </Fab>
+      </div>}
       <Table className={classes.table}>
         {tableHead !== undefined ? (
           <TableHead className={classes[tableHeaderColor + "TableHeader"]}>
@@ -213,11 +232,19 @@ export default function CustomTable(props) {
         </TableFooter>
       </Table>
       <Dialog
+        open={openAddDialog}
+        onClose={handleCloseDialog}
+        ChildComponent={editForm}
+        childProps={{
+          onSave: handleAddSave,
+        }}
+      />
+      <Dialog
         open={openDialog}
         onClose={handleCloseDialog}
         ChildComponent={editForm}
         childProps={{
-          onSave: handleSave,
+          onSave: handleUpdateSave,
           update: update
         }}
       />
@@ -254,9 +281,15 @@ CustomTable.propTypes = {
   editable: PropTypes.bool,
   onDeleteRow: PropTypes.func,
   onEditRow: PropTypes.func,
-  onAddRow: PropTypes.func
+  onAddRow: PropTypes.func,
+  add: PropTypes.bool,
 };
 
 CustomTable.defaultProps = {
-  editable: false
+  editable: false,
+  add: true,
+  onAddRow: () => console.log("onAddRow not implemented"),
+  onEditRow: () => console.log("onEditRow not implemented"),
+  onDeleteRow: () => console.log("onDeleteRow not implemented"),
+
 }

@@ -131,7 +131,7 @@ export default class FormEntry extends Component {
                     </GridContainer>
                 </CardBody>
                 <CardFooter>
-                    <Button color="primary" onClick={this.props.onSave}>Guardar</Button>
+                    <Button color="primary" onClick={()=>this.props.onSave(this.state)}>Guardar</Button>
                 </CardFooter>
             </Card>
         );
@@ -139,7 +139,7 @@ export default class FormEntry extends Component {
 }
 
 FormEntry.propTypes = {
-    update: PropTypes.object,
+    update: PropTypes.any,
     onSave: PropTypes.func
 };
 FormEntry.defaultProps = {
