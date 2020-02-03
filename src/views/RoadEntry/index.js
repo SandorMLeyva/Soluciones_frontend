@@ -10,6 +10,9 @@ import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
 import FormRoadEntry from "containers/FormRoadEntry";
 
+import { Query } from "@apollo/react-components";
+import { gql } from "@apollo/client";
+
 const styles = {
     cardCategoryWhite: {
         "&,& a,& a:hover,& a:focus": {
@@ -42,132 +45,92 @@ const styles = {
 
 const useStyles = makeStyles(styles);
 
+const query = gql`
+    {
+    roadentries{
+      id
+      client{
+        name
+      }
+      address
+      phoneNumber
+      hardware{
+        brand
+        model
+        type
+      }
+      fixedAppointmentDatetime
+    }
+  }
+`;
+
 export default function TableList() {
     const classes = useStyles();
     return (
-        <GridContainer>
-            <GridItem xs={12} sm={12} md={12}>
-                <Card>
-                    <CardHeader color="primary">
-                        <h4 className={classes.cardTitleWhite}>Trabajos en el taller</h4>
-                        <p className={classes.cardCategoryWhite}>
-                            Listado de trabajos pendientes
-                        </p>
-                    </CardHeader>
-                    <CardBody>
-                        <Table
-                            tableHeaderColor="primary"
-                            tableHead={[
-                                {
-                                    name: "Cliente",
-                                    id: "client"
-                                },
-                                {
-                                    name: "Teléfono",
-                                    id: "phone"
-                                },
-                                {
-                                    name: "Hardware",
-                                    id: "hardware"
-                                },
-                                {
-                                    name: "Fecha",
-                                    id: "date"
-                                }
-                            ]}
-                            tableData={[
-                                {
-                                    id: 1,
-                                    client: "Sándor Martín Leyva",
-                                    phone: "52580801",
-                                    hardware: 'Monitor AOC 22"',
-                                    date: "24-2-2020"
-                                },
-                                {
-                                    id: 2,
-                                    client: "Antonio Maceo Grajales",
-                                    phone: "52580801",
-                                    hardware: 'Monitor AOC 22"',
-                                    date: "24-2-2020"
-                                },
-                                {
-                                    id: 3,
-                                    client: "Jose Julian Marti Perez",
-                                    phone: "52580801",
-                                    hardware: 'Monitor AOC 22"',
-                                    date: "24-2-2020"
-                                },
-                                {
-                                    id: 1,
-                                    client: "Sándor Martín Leyva",
-                                    phone: "52580801",
-                                    hardware: 'Monitor AOC 22"',
-                                    date: "24-2-2020"
-                                },
-                                {
-                                    id: 2,
-                                    client: "Antonio Maceo Grajales",
-                                    phone: "52580801",
-                                    hardware: 'Monitor AOC 22"',
-                                    date: "24-2-2020"
-                                },
-                                {
-                                    id: 3,
-                                    client: "Jose Julian Marti Perez",
-                                    phone: "52580801",
-                                    hardware: 'Monitor AOC 22"',
-                                    date: "24-2-2020"
-                                },
-                                {
-                                    id: 1,
-                                    client: "Sándor Martín Leyva",
-                                    phone: "52580801",
-                                    hardware: 'Monitor AOC 22"',
-                                    date: "24-2-2020"
-                                },
-                                {
-                                    id: 2,
-                                    client: "Antonio Maceo Grajales",
-                                    phone: "52580801",
-                                    hardware: 'Monitor AOC 22"',
-                                    date: "24-2-2020"
-                                },
-                                {
-                                    id: 3,
-                                    client: "Jose Julian Marti Perez",
-                                    phone: "52580801",
-                                    hardware: 'Monitor AOC 22"',
-                                    date: "24-2-2020"
-                                },
-                                {
-                                    id: 1,
-                                    client: "Sándor Martín Leyva",
-                                    phone: "52580801",
-                                    hardware: 'Monitor AOC 22"',
-                                    date: "24-2-2020"
-                                },
-                                {
-                                    id: 2,
-                                    client: "Antonio Maceo Grajales",
-                                    phone: "52580801",
-                                    hardware: 'Monitor AOC 22"',
-                                    date: "24-2-2020"
-                                },
-                                {
-                                    id: 3,
-                                    client: "Jose Julian Marti Perez",
-                                    phone: "52580801",
-                                    hardware: 'Monitor AOC 22"',
-                                    date: "24-2-2020"
-                                }
-                            ]}
-                            editable={true}
-                            editForm={FormRoadEntry}
-                        />
-                    </CardBody>
-                </Card>
-            </GridItem>
+        <Query query={query}>
+            {
+                ({ loading, error, data }) => {
+                    if (loading) return <p>Loading...</p>;
+                    if (error) return <p>Error...</p>;
 
-        </GridContainer>
+                    return (
+                        <GridContainer>
+                            <GridItem xs={12} sm={12} md={12}>
+                                <Card>
+                                    <CardHeader color="primary">
+                                        <h4 className={classes.cardTitleWhite}>Trabajos en el taller</h4>
+                                        <p className={classes.cardCategoryWhite}>
+                                            Listado de trabajos pendientes
+                        </p>
+                                    </CardHeader>
+                                    <CardBody>
+                                        <Table
+                                            tableHeaderColor="primary"
+                                            tableHead={[
+                                                {
+                                                    name: "Cliente",
+                                                    id: "client"
+                                                },
+                                                {
+                                                    name: "Teléfono",
+                                                    id: "phone"
+                                                },
+                                                {
+                                                    name: "Hardware",
+                                                    id: "hardware"
+                                                },
+                                                {
+                                                    name: "Direccion",
+                                                    id: "addr"
+                                                },
+                                                {
+                                                    name: "Fecha",
+                                                    id: "date"
+                                                }
+                                            ]}
+                                            tableData={
+                                                data.roadentries.map(item => ({
+                                                    id: item.id,
+                                                    client: item.client.name,
+                                                    phone: item.phoneNumber,
+                                                    hardware: item.hardware.brand,
+                                                    date: item.fixedAppointmentDatetime,
+                                                    addr: item.address
+                                                }))
+
+                                            }
+                                            editable={true}
+                                            editForm={FormRoadEntry}
+                                        />
+                                    </CardBody>
+                                </Card>
+                            </GridItem>
+
+                        </GridContainer>
+                    )
+                }
+            }
+
+        </Query>
     );
 }
