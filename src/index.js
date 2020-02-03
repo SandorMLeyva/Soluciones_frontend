@@ -19,6 +19,9 @@ import React from "react";
 import ReactDOM from "react-dom";
 import { createBrowserHistory } from "history";
 import { Router, Route, Switch, Redirect } from "react-router-dom";
+import { ApolloProvider } from "@apollo/react-hooks";
+
+import {Client} from "./config";
 
 // core components
 import Admin from "layouts/Admin.js";
@@ -28,11 +31,13 @@ import "assets/css/material-dashboard-react.css?v=1.8.0";
 const hist = createBrowserHistory();
 
 ReactDOM.render(
-  <Router history={hist}>
-    <Switch>
-      <Route path="/" component={Admin} />
-      <Redirect from="/" to="/inicio" />
-    </Switch>
-  </Router>,
+  <ApolloProvider client={Client}>
+    <Router history={hist}>
+      <Switch>
+        <Route path="/" component={Admin} />
+        <Redirect from="/" to="/inicio" />
+      </Switch>
+    </Router>
+  </ApolloProvider>,
   document.getElementById("root")
 );
