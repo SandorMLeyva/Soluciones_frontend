@@ -11,7 +11,8 @@ import CardBody from "components/Card/CardBody.js";
 import FormRoadEntry from "containers/FormRoadEntry";
 
 import { Query } from "@apollo/react-components";
-import { gql } from "@apollo/client";
+
+import { gql } from "apollo-boost";
 
 const styles = {
     cardCategoryWhite: {

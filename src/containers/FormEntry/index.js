@@ -1,6 +1,4 @@
-import React, { Component, useState, useEffect } from "react";
-// @material-ui/core components
-import { MenuItem } from "@material-ui/core"
+import React from "react";
 // core components
 import GridItem from "components/Grid/GridItem.js";
 import GridContainer from "components/Grid/GridContainer.js";
@@ -10,8 +8,9 @@ import Card from "components/Card/Card.js";
 import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
 import CardFooter from "components/Card/CardFooter.js";
-
 import PropTypes from "prop-types";
+import { CREATE_ENTRY, UPDATE_ENTRY } from "Query";
+import { useMutation } from "@apollo/react-hooks";
 
 
 const styles = {
@@ -27,116 +26,108 @@ const styles = {
 };
 
 
-export default class FormEntry extends Component {
 
-    constructor(props) {
-        super(props);
-        const { update } = props;
-        if (update) {
-            this.state = {
-                client: update.client,
-                phone: update.phone,
-                comment: update.comment
-            }
 
-        }
-        else {
-            this.state = {
-                client: "",
-                phone: "",
-                comment: ""
-            }
-        }
 
-        this.handleClient = this.handleClient.bind(this);
-        this.handlePhone = this.handlePhone.bind(this);
-        this.handleComment = this.handleComment.bind(this);
-    }
+const FormEntry = (props) => {
+    let client;
+    let phone;
+    let comment;
+    const { update, onSave } = props;
 
-    handleComment(comment) {
-        this.setState({
-            comment: comment
-        })
-    }
-
-   
     
-    handlePhone(phone) {
-        this.setState({
-            phone: phone
-        })
+    let defaultClient = "";
+    let defaultPhone = "";
+    let defaultComment = "";
+    let defaultId = "";
+    if(update){
+        defaultClient = update.client;
+        defaultPhone = update.phone;
+        defaultComment = "";
+        defaultId = update.id;
     }
 
-    handleClient(client) {
-        this.setState({
-            client: client
-        })
-    }
-   
+    const [handleMutation] = useMutation(update ? UPDATE_ENTRY : CREATE_ENTRY);
 
-    render() {
-        return (
-            <Card>
-                <CardHeader color="primary">
-                    <h4 className={styles.cardTitleWhite}>Agregar Entrada</h4>
-                </CardHeader>
-                <CardBody>
-                    <GridContainer>
-                        <GridItem xs={12} sm={12} md={6}>
-                            {/* Change for autocomplete */}
-                            <CustomInput
-                                labelText="Cliente"
-                                id="client"
-                                formControlProps={{
-                                    fullWidth: true
-                                }}
-                                inputProps={{
-                                    value: this.state.client,
-                                    onChange: (e) => this.handleClient(e.target.value),
-                                }}
-                            />
-                        </GridItem>
-                        
-                        <GridItem xs={12} sm={12} md={4}>
-                            <CustomInput
-                                labelText="Teléfono"
-                                id="phone"
-                                formControlProps={{
-                                    fullWidth: true
-                                }}
-                                inputProps={{
-                                    value: this.state.phone,
-                                    onChange: (e) => this.handlePhone(e.target.value)
-                                }}
-                            />
-                        </GridItem>                      
-                    </GridContainer>
+    return (
+        <Card>
+            <CardHeader color="primary">
+                <h4 className={styles.cardTitleWhite}>Agregar Entrada</h4>
+            </CardHeader>
+            <CardBody>
+                <GridContainer>
+                    <GridItem xs={12} sm={12} md={6}>
+                        {/* Change for autocomplete */}
+                        <CustomInput
+                            labelText="Cliente"
+                            id="client"
+                            formControlProps={{
+                                fullWidth: true
+                            }}
+                            inputProps={{
+                                ref: (node => { client = node }),
+                                value : defaultClient
+                                // value: this.state.client,
+                                // onChange: (e) => this.handleClient(e.target.value),
+                            }}
+                        />
+                    </GridItem>
 
-                    <GridContainer>
-                        <GridItem xs={12} sm={12} md={12}>
-                            <CustomInput
-                                labelText="Condiciones de Entrada "
-                                id="comment"
-                                formControlProps={{
-                                    fullWidth: true
-                                }}
-                                inputProps={{
-                                    multiline: true,
-                                    rows: 5,
-                                    onChange: (e) => this.handleComment(e.target.value),
-                                    value: this.state.comment
-                                }}
-                            />
-                        </GridItem>
-                    </GridContainer>
-                </CardBody>
-                <CardFooter>
-                    <Button color="primary" onClick={()=>this.props.onSave(this.state)}>Guardar</Button>
-                </CardFooter>
-            </Card>
-        );
-    }
-}
+                    <GridItem xs={12} sm={12} md={4}>
+                        <CustomInput
+                            labelText="Teléfono"
+                            id="phone"
+                            formControlProps={{
+                                fullWidth: true
+                            }}
+                            inputProps={{
+                                ref: (node => { phone = node }),
+                                value: defaultPhone
+                                // value: this.state.phone,
+                                // onChange: (e) => this.handlePhone(e.target.value)
+                            }}
+                        />
+                    </GridItem>
+                </GridContainer>
+
+                <GridContainer>
+                    <GridItem xs={12} sm={12} md={12}>
+                        <CustomInput
+                            labelText="Condiciones de Entrada "
+                            id="comment"
+                            formControlProps={{
+                                fullWidth: true
+                            }}
+                            inputProps={{
+                                multiline: true,
+                                rows: 5,
+                                ref: (node => { comment = node }),
+                                value: defaultComment
+                                // onChange: (e) => this.handleComment(e.target.value),
+                                // value: this.state.comment
+                            }}
+                        />
+                    </GridItem>
+                </GridContainer>
+            </CardBody>
+            <CardFooter>
+                <Button color="primary" onClick={() => {
+                    handleMutation({
+                        variables: {
+                            entryConditions: comment.firstChild.value,
+                            userId: "1",
+                            id: defaultId,
+                            phoneNumber: phone.firstChild.value,
+                            clientId: "1",
+                            hardwareId: "1"
+                        }
+                    });
+                    onSave();
+                }}>Guardar</Button >
+            </CardFooter>
+        </Card >
+    );
+};
 
 FormEntry.propTypes = {
     update: PropTypes.any,
@@ -146,7 +137,4 @@ FormEntry.defaultProps = {
     update: false
 };
 
-
-
-
-
+export default FormEntry;

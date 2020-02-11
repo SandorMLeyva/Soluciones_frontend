@@ -9,9 +9,10 @@ import Card from "components/Card/Card.js";
 import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
 import FormEntry from "containers/FormEntry";
+import { useQuery } from "@apollo/react-hooks";
 
-import { Query } from "@apollo/react-components";
-import { gql } from "@apollo/client";
+import moment from "moment";
+import { GET_WORKSHOP_ENTRIES } from "Query";
 
 const styles = {
     cardCategoryWhite: {
@@ -45,83 +46,61 @@ const styles = {
 
 const useStyles = makeStyles(styles);
 
-const query = gql`
-    {
-    entries{
-      id
-      client{
-        name
-      }
-      phoneNumber
-      entryConditions
-      hardware{
-        brand
-        model
-        type
-      }
-      datetime
-    }
-  }
-`;
+
 
 export default function TableList() {
     const classes = useStyles();
+    const { loading, error, data } = useQuery(GET_WORKSHOP_ENTRIES);
+    if (loading) return <p>Loading...</p>;
+    if (error) return <p>Error...</p>;
+    const tableData = data.entries.map(item => ({
+        id: item.id,
+        client: item.client.name,
+        phone: item.phoneNumber,
+        hardware: item.hardware.brand,
+        date: moment(item.datetime).format("DD-MM-YYYY")
+    }));
     return (
-        <Query query={query}>
-            {
-                ({ loading, error, data }) => {
-                    if (loading) return <p>Loading...</p>;
-                    if (error) return <p>Error...</p>;
-                    return (
-                        <GridContainer>
-                            <GridItem xs={12} sm={12} md={12}>
-                                <Card>
-                                    <CardHeader color="primary">
-                                        <h4 className={classes.cardTitleWhite}>Trabajos en el taller</h4>
-                                        <p className={classes.cardCategoryWhite}>
-                                            Listado de trabajos pendientes
-                        </p>
-                                    </CardHeader>
-                                    <CardBody>
-                                        <Table
-                                            tableHeaderColor="primary"
-                                            tableHead={[
-                                                {
-                                                    name: "Cliente",
-                                                    id: "client"
-                                                },
-                                                {
-                                                    name: "Teléfono",
-                                                    id: "phone"
-                                                },
-                                                {
-                                                    name: "Hardware",
-                                                    id: "hardware"
-                                                },
-                                                {
-                                                    name: "Fecha",
-                                                    id: "date"
-                                                }
-                                            ]}
-                                            tableData={
-                                                data.entries.map(item => ({
-                                                    id: item.id,
-                                                    client: item.client.name,
-                                                    phone: item.phoneNumber,
-                                                    hardware: item.hardware.brand,
-                                                    date: item.datetime
-                                                }))
+        <GridContainer>
+            <GridItem xs={12} sm={12} md={12}>
+                <Card>
+                    <CardHeader color="primary">
+                        <h4 className={classes.cardTitleWhite}>Trabajos en el taller</h4>
+                        <p className={classes.cardCategoryWhite}>
+                            Listado de trabajos pendientes
+                                        </p>
+                    </CardHeader>
+                    <CardBody>
+                        <Table
+                            tableHeaderColor="primary"
+                            tableHead={[
+                                {
+                                    name: "Cliente",
+                                    id: "client"
+                                },
+                                {
+                                    name: "Teléfono",
+                                    id: "phone"
+                                },
+                                {
+                                    name: "Hardware",
+                                    id: "hardware"
+                                },
+                                {
+                                    name: "Fecha",
+                                    id: "date"
+                                }
+                            ]}
+                            tableData={tableData}
+                            editable={true}
+                            editForm={FormEntry}
+                        // onEditRow={mutationEditWorkshopEntry}
+                        />
+                    </CardBody>
+                </Card>
+            </GridItem>
 
-                                            }
-                                            editable={true}
-                                            editForm={FormEntry}
-                                        />
-                                    </CardBody>
-                                </Card>
-                            </GridItem>
+        </GridContainer>
 
-                        </GridContainer>
-
-                    )
-                }}</Query>);
+    );
 }

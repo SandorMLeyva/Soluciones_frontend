@@ -1,4 +1,4 @@
-import { ApolloClient, HttpLink, InMemoryCache } from "@apollo/client";
+import ApolloClient, {InMemoryCache} from "apollo-boost";
 
 let protocol = "http";
 let domain = "localhost";
@@ -14,9 +14,14 @@ export const api = `${protocol}://${domain}:${port}/${endpoint}/`;
 export const resources = `${protocol}://${domain}:${port}/`;
 
 
-const cache = new InMemoryCache();
-const link = new HttpLink({
-  uri: api
-});
 
-export const Client = new ApolloClient({ cache, link });
+const cache = new InMemoryCache();
+// const link = new HttpLink({
+//   uri: api
+// });
+
+// export const Client = new ApolloClient({ cache, link });
+export const Client = new ApolloClient({
+  uri: api,
+  cache: cache
+});

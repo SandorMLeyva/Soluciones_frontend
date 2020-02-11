@@ -108,7 +108,14 @@ export default function CustomTable(props) {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [update, setUpdate] = React.useState({});
-  const [rows, setRows] = React.useState(tableData.slice(page, rowsPerPage));
+  const [rows, setRows] = React.useState([]);
+
+  React.useEffect(
+    () => {
+      setRows(tableData.slice(page, rowsPerPage))
+    },
+    [tableData],
+  );
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -154,6 +161,7 @@ export default function CustomTable(props) {
     setOpenAddDialog(true);
   }
 
+  
   return (
     <div className={classes.tableResponsive}>
       {add && <div style={{ position: 'absolute', right: ' 8vw', top: ' -15px', zIndex: '5' }}>
@@ -181,37 +189,33 @@ export default function CustomTable(props) {
           </TableHead>
         ) : null}
         <TableBody>
-          {rows.map((prop, key) => {
-            return (
-              <TableRow key={key} className={classes.tableBodyRow}>
-                {tableHead.map((head, key) => {
-                  return (
-                    <TableCell className={classes.tableCell} key={key}>
-                      {prop[head.id]}
-                    </TableCell>
-                  );
-                })}
-                {editable &&
-                  <TableCell className={classes.tableCell}>
-                    <IconButton
-                      aria-label="delete"
-                      className={classes.margin}
-                      onClick={() => handleOpenDialog(prop)}
-                    >
-                      <EditIcon fontSize="small" />
-                    </IconButton>
-                    <IconButton
-                      aria-label="delete"
-                      color="secondary"
-                      className={classes.margin}
-                      onClick={() => handleOpenDeleteDialog(prop)}
-                    >
-                      <DeleteIcon fontSize="small" />
-                    </IconButton>
-                  </TableCell>}
-              </TableRow>
-            );
-          })}
+          {rows.map((prop) => (
+            <TableRow key={prop.id} className={classes.tableBodyRow}>
+              {tableHead.map((head, key) => (
+                <TableCell className={classes.tableCell} key={key}>
+                  {prop[head.id]}
+                </TableCell>
+              ))}
+              {editable &&
+                <TableCell className={classes.tableCell}>
+                  <IconButton
+                    aria-label="edit"
+                    className={classes.margin}
+                    onClick={() => handleOpenDialog(prop)}
+                  >
+                    <EditIcon fontSize="small" />
+                  </IconButton>
+                  <IconButton
+                    aria-label="delete"
+                    color="secondary"
+                    className={classes.margin}
+                    onClick={() => handleOpenDeleteDialog(prop)}
+                  >
+                    <DeleteIcon fontSize="small" />
+                  </IconButton>
+                </TableCell>}
+            </TableRow>
+          ))}
         </TableBody>
         <TableFooter>
           <TableRow>
@@ -262,9 +266,7 @@ export default function CustomTable(props) {
   );
 }
 
-CustomTable.defaultProps = {
-  tableHeaderColor: "gray"
-};
+
 
 CustomTable.propTypes = {
   tableHeaderColor: PropTypes.oneOf([
@@ -286,6 +288,7 @@ CustomTable.propTypes = {
 };
 
 CustomTable.defaultProps = {
+  tableHeaderColor: "gray",
   editable: false,
   add: true,
   onAddRow: () => console.log("onAddRow not implemented"),
