@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 // core components
 import GridItem from "components/Grid/GridItem.js";
 import GridContainer from "components/Grid/GridContainer.js";
@@ -41,7 +41,7 @@ const FormEntry = (props) => {
             setPhone(update.phone);
             setClient(update.client);
         }
-    }, []);
+    }, [update]);
 
     const [handleMutation] = useMutation(update ? UPDATE_ENTRY : CREATE_ENTRY);
 

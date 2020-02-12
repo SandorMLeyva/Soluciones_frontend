@@ -1,7 +1,6 @@
-import React, { Component, useState, useEffect } from "react";
-// @material-ui/core components
-import { MenuItem } from "@material-ui/core"
+import React, { useEffect, useState } from "react";
 // core components
+import { MenuItem } from "@material-ui/core"
 import GridItem from "components/Grid/GridItem.js";
 import GridContainer from "components/Grid/GridContainer.js";
 import CustomInput from "components/CustomInput/CustomInput.js";
@@ -10,8 +9,10 @@ import Card from "components/Card/Card.js";
 import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
 import CardFooter from "components/Card/CardFooter.js";
-
 import PropTypes from "prop-types";
+import { CREATE_CLIENT, UPDATE_CLIENT, GET_SOURCES } from "Query";
+import { useMutation, useQuery } from "@apollo/react-hooks";
+
 
 
 const styles = {
@@ -26,214 +27,195 @@ const styles = {
     }
 };
 
+const FormClient = (props) => {
+    const { update, onSave, onCancel } = props;
 
-export default class FormClient extends Component {
+    const [name, setName] = useState("");
+    const [addr, setAddr] = useState("");
+    const [phone, setPhone] = useState("");
+    const [municip, setMunicip] = useState("");
+    const [source, setSource] = useState("");
+    const [comment, setComment] = useState("");
+    const [id, setId] = useState(0);
 
-    constructor(props) {
-        super(props);
-        const { update } = props;
+    useEffect(() => {
         if (update) {
-            this.state = {
-                name: update.name,
-                addr: update.addr,
-                phone: update.phone,
-                municip: update.municip,
-                source: update.source,
-                comment: update.comment
-            }
-
+            setName(update.name);
+            setAddr(update.addr);
+            setPhone(update.phone);
+            setMunicip(update.municip);
+            setSource(update.source);
+            setComment(update.comment);
+            setId(update.id);
         }
-        else {
-            this.state = {
-                name: "",
-                addr: "",
-                phone: "",
-                municip: "",
-                source: "",
-                comment: ""
+    }, [update]);
+
+    const [handleMutation] = useMutation(update ? UPDATE_CLIENT : CREATE_CLIENT);
+    const { loading, error, data } = useQuery(GET_SOURCES);
+
+    if(loading)return "Loading...";
+    if(error)return "Error...";
+
+
+    const handleClickGuardar = () => {
+        handleMutation({
+            variables: {
+                sourceId: source,
+                municipality: municip,
+                phoneNumber: phone,
+                comment: comment,
+                address: addr,
+                name: name,
+                id: id
             }
-        }
-
-        this.handleName = this.handleName.bind(this);
-        this.handleAddr = this.handleAddr.bind(this);
-        this.handlePhone = this.handlePhone.bind(this);
-        this.handleMunicip = this.handleMunicip.bind(this);
-        this.handleSource = this.handleSource.bind(this);
-        this.handleComment = this.handleComment.bind(this);
+        });
+        onSave();
     }
 
-    handleComment(comment) {
-        this.setState({
-            comment: comment
-        })
-    }
+    const handleClickCancel = onCancel;
 
-    handleSource(source) {
-        this.setState({
-            source: source
-        })
-    }
+    return (
+        <Card>
+            <CardHeader color="primary">
+                <h4 className={styles.cardTitleWhite}>Agregar Cliente</h4>
+            </CardHeader>
+            <CardBody>
+                <GridContainer>
+                    <GridItem xs={12} sm={12} md={6}>
+                        <CustomInput
+                            labelText="Nombre"
+                            id="name"
+                            formControlProps={{
+                                fullWidth: true
+                            }}
+                            inputProps={{
+                                value: name,
+                                onChange: ({ target }) => setName(target.value)
+                            }}
+                        />
+                    </GridItem>
 
-    handleMunicip(municip) {
-        this.setState({
-            municip: municip
-        })
-    }
+                    <GridItem xs={12} sm={12} md={6}>
+                        <CustomInput
+                            labelText="Dirección"
+                            id="address"
+                            formControlProps={{
+                                fullWidth: true
+                            }}
+                            inputProps={{
+                                value: addr,
+                                onChange: ({ target }) => setAddr(target.value)
+                            }}
+                        />
+                    </GridItem>
 
-    handlePhone(phone) {
-        this.setState({
-            phone: phone
-        })
-    }
+                </GridContainer>
+                <GridContainer>
+                    <GridItem xs={12} sm={12} md={4}>
+                        <CustomInput
+                            labelText="Municipio"
+                            id="municipality"
+                            formControlProps={{
+                                fullWidth: true
+                            }}
+                            inputProps={{
+                                autoWidth: true,
+                                value: municip,
+                                onChange: ({ target }) => setMunicip(target.value)
+                            }}
+                            select
+                        >
+                            <MenuItem value="Arroyo Naranjo">Arroyo Naranjo</MenuItem>
+                            <MenuItem value="Boyeros">Boyeros</MenuItem>
+                            <MenuItem value="Centro Habana">Centro Habana</MenuItem>
+                            <MenuItem value="Cerro">Cerro</MenuItem>
+                            <MenuItem value="Cotorro">Cotorro</MenuItem>
+                            <MenuItem value="10 de Octubre">10 de Octubre</MenuItem>
+                            <MenuItem value="Guanabacoa">Guanabacoa</MenuItem>
+                            <MenuItem value="Habana del Este">Habana del Este</MenuItem>
+                            <MenuItem value="Habana Vieja">Habana Vieja</MenuItem>
+                            <MenuItem value="La Lisa">La Lisa</MenuItem>
+                            <MenuItem value="Marianao">Marianao</MenuItem>
+                            <MenuItem value="Playa">Playa</MenuItem>
+                            <MenuItem value="Plaza de la Revolucion">Plaza de la Revolucion</MenuItem>
+                            <MenuItem value="Regla">Regla</MenuItem>
+                            <MenuItem value="San Miguel del Padron">San Miguel del Padron</MenuItem>
+                        </CustomInput>
 
-    handleName(name) {
-        this.setState({
-            name: name
-        })
-    }
-    handleAddr(addr) {
-        this.setState({
-            addr: addr
-        })
-    }
+                    </GridItem>
+                    <GridItem xs={12} sm={12} md={4}>
+                        <CustomInput
+                            labelText="Teléfono"
+                            id="phone"
+                            formControlProps={{
+                                fullWidth: true
+                            }}
+                            inputProps={{
+                                value: phone,
+                                onChange: ({ target }) => setPhone(target.value)
+                            }}
+                        />
+                    </GridItem>
 
-    render() {
-        return (
-            <Card>
-                <CardHeader color="primary">
-                    <h4 className={styles.cardTitleWhite}>Agregar Cliente</h4>
-                </CardHeader>
-                <CardBody>
-                    <GridContainer>
-                        <GridItem xs={12} sm={12} md={6}>
-                            <CustomInput
-                                labelText="Nombre"
-                                id="name"
-                                formControlProps={{
-                                    fullWidth: true
-                                }}
-                                inputProps={{
-                                    value: this.state.name,
-                                    onChange: (e) => this.handleName(e.target.value)
-                                }}
-                            />
-                        </GridItem>
+                    <GridItem xs={12} sm={12} md={4}>
+                        <CustomInput
+                            labelText="Fuente"
+                            id="source"
+                            formControlProps={{
+                                fullWidth: true
+                            }}
+                            inputProps={{
+                                autoWidth: true,
+                                value: source,
+                                onChange: ({ target }) => setSource(target.value)
+                            }}
+                            select>
+                            {data.sources.map(({ id, name }) => (< MenuItem key={id} value={id} > {name}</MenuItem>))}
 
-                        <GridItem xs={12} sm={12} md={6}>
-                            <CustomInput
-                                labelText="Dirección"
-                                id="address"
-                                formControlProps={{
-                                    fullWidth: true
-                                }}
-                                inputProps={{
-                                    value: this.state.addr,
-                                    onChange: (e) => this.handleAddr(e.target.value)
-                                }}
-                            />
-                        </GridItem>
 
-                    </GridContainer>
-                    <GridContainer>
-                        <GridItem xs={12} sm={12} md={4}>
-                            <CustomInput
-                                labelText="Municipio"
-                                id="municipality"
-                                formControlProps={{
-                                    fullWidth: true
-                                }}
-                                inputProps={{
-                                    autoWidth: true,
-                                    value: this.state.municip,
-                                    onChange: (e) => this.handleMunicip(e.target.value)
-                                }}
-                                select
-                            >
-                                <MenuItem value="Arroyo Naranjo">Arroyo Naranjo</MenuItem>
-                                <MenuItem value="Boyeros">Boyeros</MenuItem>
-                                <MenuItem value="Centro Habana">Centro Habana</MenuItem>
-                                <MenuItem value="Cerro">Cerro</MenuItem>
-                                <MenuItem value="Cotorro">Cotorro</MenuItem>
-                                <MenuItem value="10 de Octubre">10 de Octubre</MenuItem>
-                                <MenuItem value="Guanabacoa">Guanabacoa</MenuItem>
-                                <MenuItem value="Habana del Este">Habana del Este</MenuItem>
-                                <MenuItem value="Habana Vieja">Habana Vieja</MenuItem>
-                                <MenuItem value="La Lisa">La Lisa</MenuItem>
-                                <MenuItem value="Marianao">Marianao</MenuItem>
-                                <MenuItem value="Playa">Playa</MenuItem>
-                                <MenuItem value="Plaza de la Revolucion">Plaza de la Revolucion</MenuItem>
-                                <MenuItem value="Regla">Regla</MenuItem>
-                                <MenuItem value="San Miguel del Padron">San Miguel del Padron</MenuItem>
-                            </CustomInput>
+                        </CustomInput>
+                    </GridItem>
+                </GridContainer>
 
-                        </GridItem>
-                        <GridItem xs={12} sm={12} md={4}>
-                            <CustomInput
-                                labelText="Teléfono"
-                                id="phone"
-                                formControlProps={{
-                                    fullWidth: true
-                                }}
-                                inputProps={{
-                                    value: this.state.phone,
-                                    onChange: (e) => this.handlePhone(e.target.value)
-                                }}
-                            />
-                        </GridItem>
+                <GridContainer>
+                    <GridItem xs={12} sm={12} md={12}>
+                        <CustomInput
+                            labelText="Comentario sobre el cliente "
+                            id="comment"
+                            formControlProps={{
+                                fullWidth: true
+                            }}
+                            inputProps={{
+                                multiline: true,
+                                rows: 5,
+                                value: comment,
+                                onChange: ({ target }) => setComment(target.value)
+                            }}
+                        />
+                    </GridItem>
+                </GridContainer>
+            </CardBody>
+            <CardFooter>
+                <Button color="primary" onClick={handleClickGuardar}>Guardar</Button >
+                <button hidden type="submit"></button>
+                <Button onClick={handleClickCancel}>Cancel</Button >
+            </CardFooter>
+        </Card >)
 
-                        <GridItem xs={12} sm={12} md={4}>
-                            <CustomInput
-                                labelText="Fuente"
-                                id="source"
-                                formControlProps={{
-                                    fullWidth: true
-                                }}
-                                inputProps={{
-                                    autoWidth: true,
-                                    onChange: (e) => this.handleSource(e.target.value),
-                                    value: this.state.source
-                                }}
-                                select
-                            >
-                                {/* TODO: estos items cargarlos del back */}
-                                <MenuItem value="revolico">revolico</MenuItem>
-                                <MenuItem value="porlalivre">porlalivre</MenuItem>
-                            </CustomInput>
-                        </GridItem>
-                    </GridContainer>
-
-                    <GridContainer>
-                        <GridItem xs={12} sm={12} md={12}>
-                            <CustomInput
-                                labelText="Comentario sobre el cliente "
-                                id="comment"
-                                formControlProps={{
-                                    fullWidth: true
-                                }}
-                                inputProps={{
-                                    multiline: true,
-                                    rows: 5,
-                                    onChange: (e) => this.handleComment(e.target.value),
-                                    value: this.state.comment
-                                }}
-                            />
-                        </GridItem>
-                    </GridContainer>
-                </CardBody>
-                <CardFooter>
-                    <Button color="primary">Guardar</Button>
-                </CardFooter>
-            </Card>
-        );
-    }
 }
 
+
 FormClient.propTypes = {
-    update: PropTypes.object,
+    update: PropTypes.any,
+    onSave: PropTypes.func,
+    onCancel: PropTypes.func
 };
 FormClient.defaultProps = {
-    update: false
+    update: false,
+    onSave: ()=>console.log("No tiene implementado onSave"),
+    onCancel: ()=>console.log("No tiene implementado onCancel")
 };
+export default FormClient;
 
 
 

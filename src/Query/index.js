@@ -52,3 +52,34 @@ export const CREATE_ENTRY = gql`
         }
     }
 `;
+
+export const CREATE_CLIENT = gql`
+  mutation CreateClient($sourceId: String!, $municipality: String!, $phoneNumber: String!, $comment: String!, $address: String!, $name: String!){
+  createClient(sourceId: $sourceId, municipality: $municipality, phoneNumber: $phoneNumber, comment: $comment, address: $address, name: $name){
+    ok
+    client{
+      id
+    }
+  }
+}
+`;
+
+export const UPDATE_CLIENT = gql`
+  mutation UpdateClient($sourceId: String!, $municipality: String!, $phoneNumber: String!, $comment: String!, $address: String!, $name: String!, $id: Int!){
+  updateClient(sourceId: $sourceId, municipality: $municipality, phoneNumber: $phoneNumber, comment: $comment, address: $address, name: $name){
+    ok
+    client{
+      id
+    }
+  }
+}
+`;
+
+export const GET_SOURCES = gql`
+    {
+      sources{
+        id
+        name
+      }
+    }
+`;
