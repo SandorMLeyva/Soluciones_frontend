@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef, useEffect, useState } from "react";
 // core components
 import GridItem from "components/Grid/GridItem.js";
 import GridContainer from "components/Grid/GridContainer.js";
@@ -26,106 +26,101 @@ const styles = {
 };
 
 
-
-
-
 const FormEntry = (props) => {
-    let client;
-    let phone;
-    let comment;
     const { update, onSave } = props;
 
-    
-    let defaultClient = "";
-    let defaultPhone = "";
-    let defaultComment = "";
-    let defaultId = "";
-    if(update){
-        defaultClient = update.client;
-        defaultPhone = update.phone;
-        defaultComment = "";
-        defaultId = update.id;
-    }
+    const [client, setClient] = useState("");
+    const [phone, setPhone] = useState("");
+    const [comment, setComment] = useState("");
+    const [id, setId] = useState("");
+
+    useEffect(() => {
+        if (update) {
+            setComment("");
+            setId(update.id);
+            setPhone(update.phone);
+            setClient(update.client);
+        }
+    }, []);
 
     const [handleMutation] = useMutation(update ? UPDATE_ENTRY : CREATE_ENTRY);
 
+    const handleClickGuardar = () => {
+        handleMutation({
+            variables: {
+                entryConditions: comment,
+                userId: "1",
+                id: id,
+                phoneNumber: phone,
+                clientId: "1",
+                hardwareId: "1"
+            }
+        });
+        onSave();
+    }
+
     return (
-        <Card>
-            <CardHeader color="primary">
-                <h4 className={styles.cardTitleWhite}>Agregar Entrada</h4>
-            </CardHeader>
-            <CardBody>
-                <GridContainer>
-                    <GridItem xs={12} sm={12} md={6}>
-                        {/* Change for autocomplete */}
-                        <CustomInput
-                            labelText="Cliente"
-                            id="client"
-                            formControlProps={{
-                                fullWidth: true
-                            }}
-                            inputProps={{
-                                ref: (node => { client = node }),
-                                value : defaultClient
-                                // value: this.state.client,
-                                // onChange: (e) => this.handleClient(e.target.value),
-                            }}
-                        />
-                    </GridItem>
+        <form onSubmit={handleClickGuardar}>
+            <Card>
+                <CardHeader color="primary">
+                    <h4 className={styles.cardTitleWhite}>Agregar Entrada</h4>
+                </CardHeader>
+                <CardBody>
+                    <GridContainer>
+                        <GridItem xs={12} sm={12} md={6}>
+                            {/* Change for autocomplete */}
+                            <CustomInput
+                                labelText="Cliente"
+                                id="client"
+                                formControlProps={{
+                                    fullWidth: true
+                                }}
+                                inputProps={{
+                                    value: client,
+                                    onChange: ({ target }) => setClient(target.value),
+                                }}
+                            />
+                        </GridItem>
 
-                    <GridItem xs={12} sm={12} md={4}>
-                        <CustomInput
-                            labelText="Teléfono"
-                            id="phone"
-                            formControlProps={{
-                                fullWidth: true
-                            }}
-                            inputProps={{
-                                ref: (node => { phone = node }),
-                                value: defaultPhone
-                                // value: this.state.phone,
-                                // onChange: (e) => this.handlePhone(e.target.value)
-                            }}
-                        />
-                    </GridItem>
-                </GridContainer>
+                        <GridItem xs={12} sm={12} md={4}>
+                            <CustomInput
+                                labelText="Teléfono"
+                                id="phone"
+                                formControlProps={{
+                                    fullWidth: true
+                                }}
+                                inputProps={{
+                                    value: phone,
+                                    onChange: ({ target }) => setPhone(target.value),
+                                }}
+                            />
+                        </GridItem>
+                    </GridContainer>
 
-                <GridContainer>
-                    <GridItem xs={12} sm={12} md={12}>
-                        <CustomInput
-                            labelText="Condiciones de Entrada "
-                            id="comment"
-                            formControlProps={{
-                                fullWidth: true
-                            }}
-                            inputProps={{
-                                multiline: true,
-                                rows: 5,
-                                ref: (node => { comment = node }),
-                                value: defaultComment
-                                // onChange: (e) => this.handleComment(e.target.value),
-                                // value: this.state.comment
-                            }}
-                        />
-                    </GridItem>
-                </GridContainer>
-            </CardBody>
-            <CardFooter>
-                <Button color="primary" onClick={() => {
-                    handleMutation({
-                        variables: {
-                            entryConditions: comment.firstChild.value,
-                            userId: "1",
-                            id: defaultId,
-                            phoneNumber: phone.firstChild.value,
-                            clientId: "1",
-                            hardwareId: "1"
-                        }
-                    });
-                    onSave();
-                }}>Guardar</Button >
-            </CardFooter>
-        </Card >
+                    <GridContainer>
+                        <GridItem xs={12} sm={12} md={12}>
+                            <CustomInput
+                                labelText="Condiciones de Entrada "
+                                id="comment"
+                                formControlProps={{
+                                    fullWidth: true
+                                }}
+                                inputProps={{
+                                    multiline: true,
+                                    rows: 5,
+                                    value: comment,
+                                    onChange: ({ target }) => setComment(target.value),
+                                }}
+                            />
+                        </GridItem>
+                    </GridContainer>
+                </CardBody>
+                <CardFooter>
+                    <Button color="primary" onClick={handleClickGuardar}>Guardar</Button >
+                    <button hidden type="submit"></button>
+                </CardFooter>
+            </Card >
+        </form>
     );
 };
 
