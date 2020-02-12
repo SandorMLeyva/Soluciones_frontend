@@ -27,7 +27,7 @@ const styles = {
 
 
 const FormEntry = (props) => {
-    const { update, onSave } = props;
+    const { update, onSave, onCancel } = props;
 
     const [client, setClient] = useState("");
     const [phone, setPhone] = useState("");
@@ -58,6 +58,8 @@ const FormEntry = (props) => {
         });
         onSave();
     }
+
+    const handleClickCancel =  onCancel;
 
     return (
         <form onSubmit={handleClickGuardar}>
@@ -118,6 +120,7 @@ const FormEntry = (props) => {
                 <CardFooter>
                     <Button color="primary" onClick={handleClickGuardar}>Guardar</Button >
                     <button hidden type="submit"></button>
+                    <Button onClick={handleClickCancel}>Cancel</Button >
                 </CardFooter>
             </Card >
         </form>
@@ -126,7 +129,8 @@ const FormEntry = (props) => {
 
 FormEntry.propTypes = {
     update: PropTypes.any,
-    onSave: PropTypes.func
+    onSave: PropTypes.func,
+    onCancel: PropTypes.func
 };
 FormEntry.defaultProps = {
     update: false

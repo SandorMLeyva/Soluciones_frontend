@@ -152,6 +152,10 @@ export default function CustomTable(props) {
     setOpenDialog(false);
     onEditRow(object);
   }
+  const handleCancel = () => {
+    setOpenDialog(false);
+  }
+  
   const handleAddSave = (object) => {
     setOpenAddDialog(false);
     onAddRow(object);
@@ -249,6 +253,7 @@ export default function CustomTable(props) {
         ChildComponent={editForm}
         childProps={{
           onSave: handleUpdateSave,
+          onCancel: handleCancel,
           update: update
         }}
       />
