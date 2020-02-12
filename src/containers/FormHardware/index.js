@@ -1,6 +1,5 @@
-import React, { Component, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 // @material-ui/core components
-import { MenuItem } from "@material-ui/core"
 // core components
 import GridItem from "components/Grid/GridItem.js";
 import GridContainer from "components/Grid/GridContainer.js";
@@ -12,6 +11,11 @@ import CardBody from "components/Card/CardBody.js";
 import CardFooter from "components/Card/CardFooter.js";
 
 import PropTypes from "prop-types";
+
+import { CREATE_HARDWARE, UPDATE_HARDWARE } from "Query";
+import { useMutation } from "@apollo/react-hooks";
+
+
 
 
 const styles = {
@@ -26,63 +30,58 @@ const styles = {
     }
 };
 
+const FormHardware = (props) => {
+    const { update, onSave, onCancel } = props;
 
-export default class FormHardware extends Component {
+    const [brand, setBrand] = useState("");
+    const [model, setModel] = useState("");
+    const [serial, setSerial] = useState("");
+    const [type, setType] = useState("");
+    const [id, setId] = useState(0);
 
-    constructor(props) {
-        super(props);
-        const { update } = props;
+    useEffect(() => {
         if (update) {
-            this.state = {
-                brand: update.brand,
-                model: update.model,
-                serial: update.serial,
-                type: update.type
-            }
-
+            setBrand(update.brand);
+            setModel(update.model);
+            setSerial(update.serial);
+            setType(update.type);
+            setId(update.id);
         }
-        else {
-            this.state = {
-                brand: "",
-                model: "",
-                serial: "",
-                type: ""
+    }, [update]);
+
+    const [handleMutation] = useMutation(update ? UPDATE_HARDWARE : CREATE_HARDWARE);
+
+    const clearStates = () => {
+        setBrand("");
+        setModel("");
+        setSerial("");
+        setType("");
+        setId(0);
+    }
+
+
+    const handleClickGuardar = () => {
+        handleMutation({
+            variables: {
+                brand: brand,
+                serialNumber: serial,
+                model: model,
+                type: type,
+                id: id
             }
-        }
-
-        this.handleBrand = this.handleBrand.bind(this);
-        this.handleModel = this.handleModel.bind(this);
-        this.handleSerial = this.handleSerial.bind(this);
-        this.handleType = this.handleType.bind(this)
+        });
+        clearStates();
+        onSave();
     }
 
-   
+    const handleClickCancel = () => {
+        clearStates();
+        onCancel();
+    };
 
-    handleType(type) {
-        this.setState({
-            type: type
-        })
-    }
+    return (
+        <form onSubmit={handleClickGuardar}>
 
-    handleSerial(serial) {
-        this.setState({
-            serial: serial
-        })
-    }
-
-    handleBrand(brand) {
-        this.setState({
-            brand: brand
-        })
-    }
-    handleModel(model) {
-        this.setState({
-            model: model
-        })
-    }
-
-    render() {
-        return (
             <Card>
                 <CardHeader color="primary">
                     <h4 classbrand={styles.cardTitleWhite}>Agregar Equipo</h4>
@@ -96,9 +95,9 @@ export default class FormHardware extends Component {
                                 formControlProps={{
                                     fullWidth: true
                                 }}
-                                inputProps={{
-                                    value: this.state.brand,
-                                    onChange: (e) => this.handleBrand(e.target.value)
+                                inputProps={{  
+                                    value: brand,
+                                    onChange: ({ target }) => setBrand(target.value)
                                 }}
                             />
                         </GridItem>
@@ -111,8 +110,8 @@ export default class FormHardware extends Component {
                                     fullWidth: true
                                 }}
                                 inputProps={{
-                                    value: this.state.model,
-                                    onChange: (e) => this.handleModel(e.target.value)
+                                    value: model,
+                                    onChange: ({ target }) => setModel(target.value)
                                 }}
                             />
                         </GridItem>
@@ -124,16 +123,16 @@ export default class FormHardware extends Component {
                                     fullWidth: true
                                 }}
                                 inputProps={{
-                                    value: this.state.type,
-                                    onChange: (e) => this.handleType(e.target.value)
+                                    value: type,
+                                    onChange: ({ target }) => setType(target.value)
                                 }}
-                                
+
                             />
                         </GridItem>
 
                     </GridContainer>
                     <GridContainer>
-                        
+
                         <GridItem xs={12} sm={12} md={4}>
                             <CustomInput
                                 labelText="Número de serie"
@@ -142,27 +141,36 @@ export default class FormHardware extends Component {
                                     fullWidth: true
                                 }}
                                 inputProps={{
-                                    value: this.state.serial,
-                                    onChange: (e) => this.handleSerial(e.target.value)
+                                    value: serial,
+                                    onChange: ({ target }) => setSerial(target.value)
                                 }}
                             />
                         </GridItem>
                     </GridContainer>
                 </CardBody>
                 <CardFooter>
-                    <Button color="primary">Guardar</Button>
+                    <Button onClick={handleClickCancel}>Cancel</Button >
+                    <button hidden type="submit"></button>
+                    <Button color="primary" onClick={handleClickGuardar}>Guardar</Button >
                 </CardFooter>
             </Card>
-        );
-    }
+        </form>
+    );
 }
 
+
+
 FormHardware.propTypes = {
-    update: PropTypes.object,
+    update: PropTypes.any,
+    onSave: PropTypes.func,
+    onCancel: PropTypes.func
 };
 FormHardware.defaultProps = {
-    update: false
+    update: false,
+    onSave: () => console.log("No tiene implementado onSave"),
+    onCancel: () => console.log("No tiene implementado onCancel")
 };
+export default FormHardware;
 
 
 

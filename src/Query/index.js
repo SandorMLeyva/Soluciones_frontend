@@ -83,3 +83,26 @@ export const GET_SOURCES = gql`
       }
     }
 `;
+
+
+export const CREATE_HARDWARE = gql`
+  mutation CreateHardware($brand: String!, $serialNumber: String!, $model: String!, $type: String!){
+    createHardware(brand: $brand, serialNumber: $serialNumber, model: $model, type: $type){
+      ok
+      hardware{
+        id
+      }
+    }
+  }
+`;
+
+export const UPDATE_HARDWARE = gql`
+  mutation UpdateHardware($brand: String!, $serialNumber: String!, $id: Int!, $model: String!, $type: String!){
+    updateHardware(brand: $brand, serialNumber: $serialNumber, id:$id, model: $model, type: $type){
+      ok
+      hardware{
+        id
+      }
+    }
+  }
+`;

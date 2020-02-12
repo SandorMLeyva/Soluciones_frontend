@@ -118,9 +118,9 @@ const FormEntry = (props) => {
                     </GridContainer>
                 </CardBody>
                 <CardFooter>
-                    <Button color="primary" onClick={handleClickGuardar}>Guardar</Button >
-                    <button hidden type="submit"></button>
                     <Button onClick={handleClickCancel}>Cancel</Button >
+                    <button hidden type="submit"></button>
+                    <Button color="primary" onClick={handleClickGuardar}>Guardar</Button >
                 </CardFooter>
             </Card >
         </form>
