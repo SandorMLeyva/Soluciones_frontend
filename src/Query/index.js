@@ -11,6 +11,7 @@ export const GET_WORKSHOP_ENTRIES = gql`
       phoneNumber
       entryConditions
       hardware{
+        id
         brand
         model
         type
@@ -68,6 +69,16 @@ export const CREATE_ENTRY = gql`
           }
         }
     }
+`;
+
+
+export const GET_CLIENTS_NAME = gql`
+  {
+    clients{
+      id
+      name
+    }
+  }
 `;
 
 export const CREATE_CLIENT = gql`
@@ -143,6 +154,18 @@ export const UPDATE_HARDWARE = gql`
         model
         type
         serialNumber
+      }
+    }
+  }
+`;
+
+
+export const DELETE_ENTRY = gql`
+  mutation DeleteWorkshopEntry($id:String!){
+    deleteEntry(id: $id){
+      ok
+      entry{
+        id
       }
     }
   }

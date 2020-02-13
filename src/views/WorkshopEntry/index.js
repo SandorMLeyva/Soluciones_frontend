@@ -9,10 +9,12 @@ import Card from "components/Card/Card.js";
 import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
 import FormEntry from "containers/FormEntry";
-import { useQuery } from "@apollo/react-hooks";
+import { useQuery, useMutation } from "@apollo/react-hooks";
 
 import moment from "moment";
-import { GET_WORKSHOP_ENTRIES } from "Query";
+import { GET_WORKSHOP_ENTRIES, DELETE_ENTRY } from "Query";
+import FlowWorkshopEntry from "containers/FlowWorkshopEntry";
+
 
 const styles = {
     cardCategoryWhite: {
@@ -50,9 +52,18 @@ const useStyles = makeStyles(styles);
 
 export default function TableList() {
     const classes = useStyles();
+    const [handleDelete] = useMutation(DELETE_ENTRY, {
+        update(cache, { data: { deleteEntry } }) {
+            const { entries } = cache.readQuery({ query: GET_WORKSHOP_ENTRIES });
+            cache.writeQuery({
+                query: GET_WORKSHOP_ENTRIES,
+                data: { entries: entries.filter(e=>e.id !== deleteEntry.entry.id) }
+            });
+        }
+    }
+    );
     const { loading, error, data } = useQuery(GET_WORKSHOP_ENTRIES);
     if (loading) return <p>Loading...</p>;
-    console.log(error);
     if (error) return <p>Error...</p>;
 
     const tableData = data.entries.map(item => ({
@@ -62,6 +73,7 @@ export default function TableList() {
         hardware: item.hardware.brand,
         date: moment(item.datetime).format("DD-MM-YYYY")
     }));
+
     return (
         <GridContainer>
             <GridItem xs={12} sm={12} md={12}>
@@ -96,6 +108,8 @@ export default function TableList() {
                             tableData={tableData}
                             editable={true}
                             editForm={FormEntry}
+                            addForm={FlowWorkshopEntry}
+                            onDeleteRow={handleDelete}
                         // onEditRow={mutationEditWorkshopEntry}
                         />
                     </CardBody>

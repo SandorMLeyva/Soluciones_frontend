@@ -12,15 +12,15 @@ const useStyles = makeStyles(theme => ({
 
 export default function ContainedButtons(props) {
   const classes = useStyles();
-  const {onYesClick, onNoClick} = props;
+  const { onYesClick, onNoClick } = props;
 
   return (
-    <div className={classes.root} style={{textAlign:"center"}}>
-      <Button variant="contained" color="primary" onClick={onYesClick}>
-        Si
-      </Button>
+    <div className={classes.root} style={{ textAlign: "center" }}>
       <Button variant="contained" color="secondary" onClick={onNoClick}>
         No
+      </Button>
+      <Button variant="contained" color="primary" onClick={onYesClick}>
+        Si
       </Button>
     </div>
   );

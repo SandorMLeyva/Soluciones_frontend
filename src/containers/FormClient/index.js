@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
 // core components
-import { MenuItem } from "@material-ui/core"
+import { MenuItem } from "@material-ui/core";
 import GridItem from "components/Grid/GridItem.js";
 import GridContainer from "components/Grid/GridContainer.js";
 import CustomInput from "components/CustomInput/CustomInput.js";
 import Button from "components/CustomButtons/Button.js";
 import Card from "components/Card/Card.js";
-import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
+import CardHeader from "components/Card/CardHeader.js";
 import CardFooter from "components/Card/CardFooter.js";
 import PropTypes from "prop-types";
 import { CREATE_CLIENT, UPDATE_CLIENT, GET_SOURCES } from "Query";
@@ -28,7 +28,7 @@ const styles = {
 };
 
 const FormClient = (props) => {
-    const { update, onSave, onCancel, autoClean } = props;
+    const { update, onSave, onCancel, autoClean, header } = props;
 
     const [name, setName] = useState("");
     const [addr, setAddr] = useState("");
@@ -105,11 +105,11 @@ const FormClient = (props) => {
     return (
 
         <Card>
-            <CardHeader color="primary">
+            {header? <CardHeader color="primary">
                 <h4 className={styles.cardTitleWhite}>Agregar Cliente</h4>
-                {errorForm ? <h4>{errorForm}</h4> : null}
-            </CardHeader>
+            </CardHeader>: null}
             <CardBody>
+                {errorForm ? <h4>{errorForm}</h4> : null}
                 <GridContainer>
                     <GridItem xs={12} sm={12} md={6}>
                         <CustomInput
@@ -231,11 +231,13 @@ FormClient.propTypes = {
     update: PropTypes.any,
     onSave: PropTypes.func,
     onCancel: PropTypes.func,
-    autoClean: PropTypes.bool
+    autoClean: PropTypes.bool,
+    header: PropTypes.bool,
 };
 FormClient.defaultProps = {
     update: false,
     autoClean: true,
+    header: false,
     onSave: () => console.log("No tiene implementado onSave"),
     onCancel: () => console.log("No tiene implementado onCancel")
 };

@@ -9,7 +9,7 @@ import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
 import CardFooter from "components/Card/CardFooter.js";
 import PropTypes from "prop-types";
-import { CREATE_ENTRY, UPDATE_ENTRY } from "Query";
+import { CREATE_ENTRY, UPDATE_ENTRY, GET_WORKSHOP_ENTRIES } from "Query";
 import { useMutation } from "@apollo/react-hooks";
 
 
@@ -47,7 +47,26 @@ const FormEntry = (props) => {
         }
     }, [update]);
 
-    const [handleMutation] = useMutation(id ? UPDATE_ENTRY : CREATE_ENTRY);
+    const [handleMutation] = useMutation(id ? UPDATE_ENTRY : CREATE_ENTRY, {
+        update(cache, { data }) {
+            const { entries } = cache.readQuery({ query: GET_WORKSHOP_ENTRIES });
+            
+            if (id) {
+                // cache.writeQuery({
+                //     query: GET_WORKSHOP_ENTRIES,
+                //     // TODO: arreglar
+                //     data: { entries: entries.filter(e => e.id !== data.updateEntry.entry.id) }
+                // });
+            }
+            else {
+                cache.writeQuery({
+                    query: GET_WORKSHOP_ENTRIES,
+                    data: { entries: entries.concat(data.createEntry.entry) }
+                });
+            }
+
+        }
+    });
 
     const autoCleanStates = () => {
         if (autoClean) {

@@ -101,7 +101,7 @@ TablePaginationActions.propTypes = {
 
 export default function CustomTable(props) {
   const classes = useStyles();
-  const { tableHead, tableData, tableHeaderColor, editable, editForm, add, onAddRow, onEditRow, onDeleteRow } = props;
+  const { tableHead, tableData, tableHeaderColor, editable, editForm, add, onAddRow, onEditRow, onDeleteRow, addForm } = props;
   const [openAddDialog, setOpenAddDialog] = React.useState(false);
   const [openDialog, setOpenDialog] = React.useState(false);
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(false);
@@ -142,8 +142,13 @@ export default function CustomTable(props) {
     setOpenDeleteDialog(false);
   };
   const handleYesClick = () => {
+    onDeleteRow({
+      variables: {
+        id: update.id
+      }
+    });
     setOpenDeleteDialog(false);
-    onDeleteRow();
+
   }
   const handleNoClick = () => {
     setOpenDeleteDialog(false);
@@ -155,17 +160,20 @@ export default function CustomTable(props) {
   const handleCancel = () => {
     setOpenDialog(false);
   }
-  
-  const handleAddSave = (object) => {
+
+  const handleAddSave = () => {
     setOpenAddDialog(false);
-    onAddRow(object);
+  }
+
+  const handleAddClose = () => {
+    setOpenAddDialog(false);
   }
 
   const handleOpenAddDialog = () => {
     setOpenAddDialog(true);
   }
 
-  
+
   return (
     <div className={classes.tableResponsive}>
       {add && <div style={{ position: 'absolute', right: ' 8vw', top: ' -15px', zIndex: '5' }}>
@@ -240,11 +248,13 @@ export default function CustomTable(props) {
         </TableFooter>
       </Table>
       <Dialog
+        fullscreen={true}
         open={openAddDialog}
         onClose={handleCloseDialog}
-        ChildComponent={editForm}
+        ChildComponent={addForm}
+        handleClose={handleAddClose}
         childProps={{
-          onSave: handleAddSave,
+          onFinish: handleAddSave,
         }}
       />
       <Dialog
@@ -290,6 +300,7 @@ CustomTable.propTypes = {
   onEditRow: PropTypes.func,
   onAddRow: PropTypes.func,
   add: PropTypes.bool,
+  addForm: PropTypes.any
 };
 
 CustomTable.defaultProps = {
