@@ -41,6 +41,7 @@ import FormService from "containers/FormService";
 import FormFix from "containers/FormFix";
 import FormRoadService from "containers/FormRoadService";
 import FormRoadEntry from "containers/FormRoadEntry";
+import FlowWorkshopEntry from "containers/FlowWorkshopEntry";
 
 const useStyles = makeStyles(styles);
 
@@ -117,6 +118,11 @@ export default function Dashboard() {
       <GridContainer>
         <GridItem xs={12} sm={12} md={12}>
           <FormRoadEntry/>
+        </GridItem>
+      </GridContainer>
+      <GridContainer>
+        <GridItem xs={12} sm={12} md={12}>
+          <FlowWorkshopEntry/>
         </GridItem>
       </GridContainer>
 

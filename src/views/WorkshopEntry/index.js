@@ -52,7 +52,9 @@ export default function TableList() {
     const classes = useStyles();
     const { loading, error, data } = useQuery(GET_WORKSHOP_ENTRIES);
     if (loading) return <p>Loading...</p>;
+    console.log(error);
     if (error) return <p>Error...</p>;
+
     const tableData = data.entries.map(item => ({
         id: item.id,
         client: item.client.name,

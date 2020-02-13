@@ -27,112 +27,133 @@ const styles = {
 
 
 const FormEntry = (props) => {
-    const { update, onSave, onCancel } = props;
+    const { update, onSave, onCancel, autoClean } = props;
 
     const [client, setClient] = useState("");
     const [phone, setPhone] = useState("");
-    const [comment, setComment] = useState("");
+    const [entryConditions, setEntryConditions] = useState("");
     const [id, setId] = useState("");
+    const [hardware, setHardware] = useState("");
+    const [errorForm, setErrorForm] = useState("");
+
 
     useEffect(() => {
         if (update) {
-            setComment("");
-            setId(update.id);
-            setPhone(update.phone);
-            setClient(update.client);
+            setEntryConditions(update.entryConditions ? update.entryConditions : "");
+            setId(update.id ? update.id : "");
+            setPhone(update.phoneNumber ? update.phoneNumber : "");
+            setClient(update.clientId ? update.clientId : "");
+            setHardware(update.hardwareId ? update.hardwareId : "");
         }
     }, [update]);
 
-    const [handleMutation] = useMutation(update ? UPDATE_ENTRY : CREATE_ENTRY);
+    const [handleMutation] = useMutation(id ? UPDATE_ENTRY : CREATE_ENTRY);
+
+    const autoCleanStates = () => {
+        if (autoClean) {
+            setEntryConditions("");
+            setId("");
+            setPhone("");
+            setClient("");
+            setHardware("");
+        }
+    }
+
 
     const handleClickGuardar = () => {
+        if (!phone) {
+            setErrorForm("Teléfono no puede quedar vacío")
+            return;
+        }
+
         handleMutation({
             variables: {
-                entryConditions: comment,
+                entryConditions: entryConditions,
+                // TODO: poner aqui el usuario
                 userId: "1",
                 id: id,
                 phoneNumber: phone,
-                clientId: "1",
-                hardwareId: "1"
+                clientId: client,
+                hardwareId: hardware
             }
+        }).then(({ data }) => {
+            autoCleanStates();
+            onSave(id ? data.updateEntry.entry : data.createEntry.entry);
         });
-        onSave();
     }
 
-    const handleClickCancel =  onCancel;
+    const handleClickCancel = onCancel;
 
     return (
-        <form onSubmit={handleClickGuardar}>
-            <Card>
-                <CardHeader color="primary">
-                    <h4 className={styles.cardTitleWhite}>Agregar Entrada</h4>
-                </CardHeader>
-                <CardBody>
-                    <GridContainer>
-                        <GridItem xs={12} sm={12} md={6}>
-                            {/* Change for autocomplete */}
-                            <CustomInput
-                                labelText="Cliente"
-                                id="client"
-                                formControlProps={{
-                                    fullWidth: true
-                                }}
-                                inputProps={{
-                                    value: client,
-                                    onChange: ({ target }) => setClient(target.value),
-                                }}
-                            />
-                        </GridItem>
+        <Card>
+            <CardHeader color="primary">
+                <h4 className={styles.cardTitleWhite}>Agregar Entrada</h4>
+                {errorForm ? <h4>{errorForm}</h4> : null}
 
-                        <GridItem xs={12} sm={12} md={4}>
-                            <CustomInput
-                                labelText="Teléfono"
-                                id="phone"
-                                formControlProps={{
-                                    fullWidth: true
-                                }}
-                                inputProps={{
-                                    value: phone,
-                                    onChange: ({ target }) => setPhone(target.value),
-                                }}
-                            />
-                        </GridItem>
-                    </GridContainer>
+            </CardHeader>
+            <CardBody>
+                <GridContainer>
+                    {/* <GridItem xs={12} sm={12} md={6}>
+                        
+                        <CustomInput
+                            labelText="Cliente"
+                            formControlProps={{
+                                fullWidth: true
+                            }}
+                            inputProps={{
+                                value: client,
+                                onChange: ({ target }) => setClient(target.value),
+                            }}
+                        />
+                    </GridItem> */}
 
-                    <GridContainer>
-                        <GridItem xs={12} sm={12} md={12}>
-                            <CustomInput
-                                labelText="Condiciones de Entrada "
-                                id="comment"
-                                formControlProps={{
-                                    fullWidth: true
-                                }}
-                                inputProps={{
-                                    multiline: true,
-                                    rows: 5,
-                                    value: comment,
-                                    onChange: ({ target }) => setComment(target.value),
-                                }}
-                            />
-                        </GridItem>
-                    </GridContainer>
-                </CardBody>
-                <CardFooter>
-                    <Button onClick={handleClickCancel}>Cancel</Button >
-                    <button hidden type="submit"></button>
-                    <Button color="primary" onClick={handleClickGuardar}>Guardar</Button >
-                </CardFooter>
-            </Card >
-        </form>
+                    <GridItem xs={12} sm={12} md={4}>
+                        <CustomInput
+                            labelText="Teléfono"
+                            formControlProps={{
+                                fullWidth: true
+                            }}
+                            inputProps={{
+                                value: phone,
+                                onChange: ({ target }) => setPhone(target.value),
+                            }}
+                        />
+                    </GridItem>
+                </GridContainer>
+
+                <GridContainer>
+                    <GridItem xs={12} sm={12} md={12}>
+                        <CustomInput
+                            labelText="Condiciones de Entrada "
+                            formControlProps={{
+                                fullWidth: true
+                            }}
+                            inputProps={{
+                                multiline: true,
+                                rows: 5,
+                                value: entryConditions,
+                                onChange: ({ target }) => setEntryConditions(target.value),
+                            }}
+                        />
+                    </GridItem>
+                </GridContainer>
+            </CardBody>
+            <CardFooter>
+                <Button onClick={handleClickCancel}>Cancel</Button >
+                <Button color="primary" onClick={handleClickGuardar}>Guardar</Button >
+            </CardFooter>
+        </Card >
     );
 };
 
 FormEntry.propTypes = {
     update: PropTypes.any,
     onSave: PropTypes.func,
-    onCancel: PropTypes.func
+    onCancel: PropTypes.func,
+    autoClean: PropTypes.bool,
 };
 FormEntry.defaultProps = {
+    autoClean: true,
     update: false
 };
 

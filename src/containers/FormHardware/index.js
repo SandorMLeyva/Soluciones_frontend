@@ -31,36 +31,43 @@ const styles = {
 };
 
 const FormHardware = (props) => {
-    const { update, onSave, onCancel } = props;
+    const { update, onSave, onCancel, autoClean } = props;
 
     const [brand, setBrand] = useState("");
     const [model, setModel] = useState("");
     const [serial, setSerial] = useState("");
     const [type, setType] = useState("");
-    const [id, setId] = useState(0);
+    const [id, setId] = useState("");
+    const [errorForm, setErrorForm] = useState("");
 
     useEffect(() => {
         if (update) {
             setBrand(update.brand);
             setModel(update.model);
-            setSerial(update.serial);
+            setSerial(update.serialNumber);
             setType(update.type);
             setId(update.id);
         }
     }, [update]);
 
-    const [handleMutation] = useMutation(update ? UPDATE_HARDWARE : CREATE_HARDWARE);
+    const [handleMutation] = useMutation(id ? UPDATE_HARDWARE : CREATE_HARDWARE);
 
     const clearStates = () => {
-        setBrand("");
-        setModel("");
-        setSerial("");
-        setType("");
-        setId(0);
+        if (autoClean) {
+            setBrand("");
+            setModel("");
+            setSerial("");
+            setType("");
+            setId("");
+        }
     }
 
 
     const handleClickGuardar = () => {
+        if (!(brand && serial && model && type)) {
+            setErrorForm("No pueden haber campos vacíos");
+            return;
+        }
         handleMutation({
             variables: {
                 brand: brand,
@@ -69,9 +76,10 @@ const FormHardware = (props) => {
                 type: type,
                 id: id
             }
+        }).then(({data}) => {
+            clearStates();
+            onSave(id? data.updateHardware.hardware: data.createHardware.hardware);
         });
-        clearStates();
-        onSave();
     }
 
     const handleClickCancel = () => {
@@ -80,22 +88,21 @@ const FormHardware = (props) => {
     };
 
     return (
-        <form onSubmit={handleClickGuardar}>
 
             <Card>
                 <CardHeader color="primary">
                     <h4 classbrand={styles.cardTitleWhite}>Agregar Equipo</h4>
+                    {errorForm ? <h4>{errorForm}</h4> : null}
                 </CardHeader>
                 <CardBody>
                     <GridContainer>
                         <GridItem xs={12} sm={12} md={4}>
                             <CustomInput
                                 labelText="Marca"
-                                id="brand"
                                 formControlProps={{
                                     fullWidth: true
                                 }}
-                                inputProps={{  
+                                inputProps={{
                                     value: brand,
                                     onChange: ({ target }) => setBrand(target.value)
                                 }}
@@ -105,7 +112,6 @@ const FormHardware = (props) => {
                         <GridItem xs={12} sm={12} md={4}>
                             <CustomInput
                                 labelText="Modelo"
-                                id="model"
                                 formControlProps={{
                                     fullWidth: true
                                 }}
@@ -118,7 +124,6 @@ const FormHardware = (props) => {
                         <GridItem xs={12} sm={12} md={4}>
                             <CustomInput
                                 labelText="Tipo"
-                                id="type"
                                 formControlProps={{
                                     fullWidth: true
                                 }}
@@ -136,7 +141,6 @@ const FormHardware = (props) => {
                         <GridItem xs={12} sm={12} md={4}>
                             <CustomInput
                                 labelText="Número de serie"
-                                id="serial"
                                 formControlProps={{
                                     fullWidth: true
                                 }}
@@ -150,11 +154,10 @@ const FormHardware = (props) => {
                 </CardBody>
                 <CardFooter>
                     <Button onClick={handleClickCancel}>Cancel</Button >
-                    <button hidden type="submit"></button>
                     <Button color="primary" onClick={handleClickGuardar}>Guardar</Button >
                 </CardFooter>
             </Card>
-        </form>
+      
     );
 }
 
@@ -163,10 +166,12 @@ const FormHardware = (props) => {
 FormHardware.propTypes = {
     update: PropTypes.any,
     onSave: PropTypes.func,
-    onCancel: PropTypes.func
+    onCancel: PropTypes.func,
+    autoClean: PropTypes.bool
 };
 FormHardware.defaultProps = {
     update: false,
+    autoClean: true,
     onSave: () => console.log("No tiene implementado onSave"),
     onCancel: () => console.log("No tiene implementado onCancel")
 };
