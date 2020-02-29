@@ -21,11 +21,33 @@ export const GET_WORKSHOP_ENTRIES = gql`
   }
 `;
 
+export const GET_WORKSHOP_ENTRY_BY_ID = gql`
+    query Entry($id: String){
+      entry(id: $id){
+        id
+        client{
+          id
+          name
+        }
+        phoneNumber
+        entryConditions
+        hardware{
+          id
+          brand
+          model
+          type
+          serialNumber
+        }
+        datetime
+      }
+    }
+`;
+
 
 
 export const UPDATE_ENTRY = gql`
-    mutation UpdateEntry( $entryConditions: String!, $userId: String!, $id: String!, $phoneNumber: String!, $clientId: String!, $hardwareId: String!){
-        updateEntry( entryConditions: $entryConditions, userId: $userId, id: $id, phoneNumber: $phoneNumber, clientId: $clientId, hardwareId: $hardwareId){
+    mutation UpdateEntry( $entryConditions: String!, $hardwareId: String!, $id: String!, $clientId: String!, $phoneNumber: String!, $userId: String!){
+        updateEntry( entryConditions: $entryConditions, hardwareId: $hardwareId, id: $id, clientId: $clientId, phoneNumber: $phoneNumber, userId: $userId){
         ok
         entry{
             id

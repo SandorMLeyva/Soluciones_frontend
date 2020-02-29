@@ -128,8 +128,8 @@ export default function CustomTable(props) {
     setRows(tableData.slice(0, value));
   };
   const handleOpenDialog = (object) => {
-    setOpenDialog(true);
     setUpdate(object);
+    setOpenDialog(true);
   };
   const handleCloseDialog = () => {
     setOpenDialog(false);
@@ -173,7 +173,13 @@ export default function CustomTable(props) {
     setOpenAddDialog(true);
   }
 
+  
 
+  const handleUpdateClose = () => {
+    setOpenDialog(false);
+  }
+
+ 
   return (
     <div className={classes.tableResponsive}>
       {add && <div style={{ position: 'absolute', right: ' 8vw', top: ' -15px', zIndex: '5' }}>
@@ -258,15 +264,17 @@ export default function CustomTable(props) {
         }}
       />
       <Dialog
+        fullscreen={true}
         open={openDialog}
         onClose={handleCloseDialog}
-        ChildComponent={editForm}
+        ChildComponent={addForm}
+        handleClose={handleUpdateClose}
         childProps={{
-          onSave: handleUpdateSave,
-          onCancel: handleCancel,
+          onFinish: handleUpdateSave,
           update: update
         }}
       />
+      
       <Dialog
         open={openDeleteDialog}
         onClose={handleCloseDeleteDialog}

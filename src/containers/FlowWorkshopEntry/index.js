@@ -24,8 +24,10 @@ import AddIcon from '@material-ui/icons/Add';
 import CheckIcon from '@material-ui/icons/Check';
 
 
-import { GET_CLIENTS_NAME } from 'Query';
+import { GET_CLIENTS_NAME, GET_WORKSHOP_ENTRY_BY_ID } from 'Query';
 import { useQuery } from "@apollo/react-hooks";
+import { Query } from "@apollo/react-components";
+import { Client } from "config";
 
 
 const useStyles = makeStyles(theme => ({
@@ -51,6 +53,7 @@ function getSteps() {
 
 export default function FlowWorkshopEntry(props) {
     const { onFinish, update } = props;
+
     const classes = useStyles();
     const [activeStep, setActiveStep] = React.useState(0);
     const [completed, setCompleted] = React.useState({});
@@ -61,6 +64,26 @@ export default function FlowWorkshopEntry(props) {
     const [client, setClient] = React.useState({})
     const [object2, setObject2] = React.useState({})
     const [object3, setObject3] = React.useState({})
+
+    React.useEffect(() => {
+        {
+            if (update) {
+                Client.query({
+                    query: GET_WORKSHOP_ENTRY_BY_ID,
+                    variables: { id: update.id }
+                }).then(({ loading, error, data }) => {
+                    setClient(data.entry.client.id);
+                    setObject2(data.entry.hardware);
+                    setObject3({
+                        ...data.entry,
+                        clientId: data.entry.client.id,
+                        hardwareId: data.entry.hardware.id
+                    });
+                });
+
+            }
+        }
+    }, [update])
 
     const { loading, error, data } = useQuery(GET_CLIENTS_NAME);
     if (loading) return <p>Loading...</p>;
@@ -107,28 +130,33 @@ export default function FlowWorkshopEntry(props) {
     };
 
 
+
+
     const getStepContent = (step) => {
         switch (step) {
             case 0:
                 if (createClient)
-                    return (<React.Fragment>
+                    return (
 
-                        <div style={{ position: 'absolute', zIndex: '1', right: '8vw', top: '28vh' }}>
-                            <Fab color="primary" aria-label="add" onClick={() => {
-                                setCreateClient(false)
-                            }}>
-                                <CheckIcon />
-                            </Fab>
-                        </div>
-                        <FormClient update={object1} onSave={(obj) => {
-                            handleComplete();
-                            setObject1(obj);
-                            setObject3({
-                                ...object3,
-                                clientId: obj.id
-                            });
-                        }} autoClean={false} />
-                    </React.Fragment>
+                        <React.Fragment>
+
+                            <div style={{ position: 'absolute', zIndex: '1', right: '8vw', top: '28vh' }}>
+                                <Fab color="primary" aria-label="add" onClick={() => {
+                                    setCreateClient(false)
+                                }}>
+                                    <CheckIcon />
+                                </Fab>
+                            </div>
+                            <FormClient update={object1} onSave={(obj) => {
+                                handleComplete();
+                                setObject1(obj);
+                                setObject3({
+                                    ...object3,
+                                    clientId: obj.id
+                                });
+                            }} autoClean={false} />
+                        </React.Fragment>
+
                     );
                 else
                     return (

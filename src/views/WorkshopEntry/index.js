@@ -110,7 +110,8 @@ export default function TableList() {
                             editForm={FormEntry}
                             addForm={FlowWorkshopEntry}
                             onDeleteRow={handleDelete}
-                        // onEditRow={mutationEditWorkshopEntry}
+                            // onEditRow={()=>alert("ass")}
+                            // onEditRow={mutationEditWorkshopEntry}
                         />
                     </CardBody>
                 </Card>
