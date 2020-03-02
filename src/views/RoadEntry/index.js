@@ -8,11 +8,11 @@ import Table from "components/Table/Table.js";
 import Card from "components/Card/Card.js";
 import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
-import FormRoadEntry from "containers/FormRoadEntry";
 
-import { Query } from "@apollo/react-components";
+import { useQuery, useMutation } from "@apollo/react-hooks";
+import FlowRoadEntry from "containers/FlowRoadEntry";
+import { GET_ROAD_ENTRIES, DELETE_ROAD_ENTRY } from "Query";
 
-import { gql } from "apollo-boost";
 
 const styles = {
     cardCategoryWhite: {
@@ -46,92 +46,78 @@ const styles = {
 
 const useStyles = makeStyles(styles);
 
-const query = gql`
-    {
-    roadentries{
-      id
-      client{
-        name
-      }
-      address
-      phoneNumber
-      hardware{
-        brand
-        model
-        type
-      }
-      fixedAppointmentDatetime
-    }
-  }
-`;
-
 export default function TableList() {
     const classes = useStyles();
+
+    const [handleDelete] = useMutation(DELETE_ROAD_ENTRY, {
+        update(cache, { data: { deleteRoadentry } }) {
+            const { roadentries } = cache.readQuery({ query: GET_ROAD_ENTRIES });
+            cache.writeQuery({
+                query: GET_ROAD_ENTRIES,
+                data: { roadentries: roadentries.filter(e => e.id !== deleteRoadentry.roadentry.id) }
+            });
+        }
+    }
+    );
+    const { loading, error, data } = useQuery(GET_ROAD_ENTRIES);
+    if (loading) return <p>Loading...</p>;
+    if (error) return <p>Error...</p>;
+
+    const tableData = data.roadentries.map(item => ({
+        id: item.id,
+        client: item.client.name,
+        phone: item.phoneNumber,
+        hardware: item.hardware.brand,
+        date: item.datetime
+        // date: moment(item.datetime).format("DD-MM-YYYY")
+    }))
+
     return (
-        <Query query={query}>
-            {
-                ({ loading, error, data }) => {
-                    if (loading) return <p>Loading...</p>;
-                    if (error) return <p>Error...</p>;
+        <GridContainer>
+            <GridItem xs={12} sm={12} md={12}>
+                <Card>
+                    <CardHeader color="primary">
+                        <h4 className={classes.cardTitleWhite}>Trabajos en el taller</h4>
+                        <p className={classes.cardCategoryWhite}>
+                            Listado de trabajos pendientes
+                                        </p>
+                    </CardHeader>
+                    <CardBody>
+                        <Table
+                            tableHeaderColor="primary"
+                            tableHead={[
+                                {
+                                    name: "Cliente",
+                                    id: "client"
+                                },
+                                {
+                                    name: "Teléfono",
+                                    id: "phone"
+                                },
+                                {
+                                    name: "Hardware",
+                                    id: "hardware"
+                                },
+                                {
+                                    name: "Direccion",
+                                    id: "addr"
+                                },
+                                {
+                                    name: "Fecha",
+                                    id: "date"
+                                }
+                            ]}
+                            tableData={tableData}
+                            editable={true}
+                            addForm={FlowRoadEntry}
+                            onDeleteRow={handleDelete}
+                            urlDetails={"/detalle/calle"}
+                        />
+                    </CardBody>
+                </Card>
+            </GridItem>
 
-                    return (
-                        <GridContainer>
-                            <GridItem xs={12} sm={12} md={12}>
-                                <Card>
-                                    <CardHeader color="primary">
-                                        <h4 className={classes.cardTitleWhite}>Trabajos en el taller</h4>
-                                        <p className={classes.cardCategoryWhite}>
-                                            Listado de trabajos pendientes
-                        </p>
-                                    </CardHeader>
-                                    <CardBody>
-                                        <Table
-                                            tableHeaderColor="primary"
-                                            tableHead={[
-                                                {
-                                                    name: "Cliente",
-                                                    id: "client"
-                                                },
-                                                {
-                                                    name: "Teléfono",
-                                                    id: "phone"
-                                                },
-                                                {
-                                                    name: "Hardware",
-                                                    id: "hardware"
-                                                },
-                                                {
-                                                    name: "Direccion",
-                                                    id: "addr"
-                                                },
-                                                {
-                                                    name: "Fecha",
-                                                    id: "date"
-                                                }
-                                            ]}
-                                            tableData={
-                                                data.roadentries.map(item => ({
-                                                    id: item.id,
-                                                    client: item.client.name,
-                                                    phone: item.phoneNumber,
-                                                    hardware: item.hardware.brand,
-                                                    date: item.fixedAppointmentDatetime,
-                                                    addr: item.address
-                                                }))
+        </GridContainer>
 
-                                            }
-                                            editable={true}
-                                            editForm={FormRoadEntry}
-                                        />
-                                    </CardBody>
-                                </Card>
-                            </GridItem>
-
-                        </GridContainer>
-                    )
-                }
-            }
-
-        </Query>
     );
 }
