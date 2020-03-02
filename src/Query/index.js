@@ -29,6 +29,9 @@ export const GET_WORKSHOP_ENTRY_BY_ID = gql`
           id
           name
         }
+        user{
+          username
+        }
         phoneNumber
         entryConditions
         hardware{
@@ -189,6 +192,135 @@ export const DELETE_ENTRY = gql`
       entry{
         id
       }
+    }
+  }
+`;
+
+export const GET_ROAD_ENTRIES = gql`
+    {
+    roadentries{
+      id
+      client{
+        name
+      }
+      address
+      phoneNumber
+      hardware{
+        brand
+        model
+        type
+      }
+      fixedAppointmentDatetime
+    }
+  }
+`;
+
+export const DELETE_ROAD_ENTRY = gql`
+  mutation DeleteRoadEntry($id:String!){
+    deleteRoadentry(id: $id){
+      ok
+      roadentry{
+        id
+      }
+    }
+  }
+`;
+
+export const UPDATE_ROAD_ENTRY = gql`
+  mutation UpdateRoadEntry($userId: String!, $customerObservation: String!, $clientId: String!, $appointmentDatetime: String, $phoneNumber: String!, $fixedAppointmentDatetime: String,  $address: String!,  $hardwareId: String!, $id: String!){
+    updateRoadentry(userId: $userId, customerObservation: $customerObservation, clientId: $clientId, appointmentDatetime: $appointmentDatetime, phoneNumber: $phoneNumber, fixedAppointmentDatetime: $fixedAppointmentDatetime, address: $address, hardwareId: $hardwareId, id: $id){
+      ok
+      roadentry{
+        id       
+        address
+        phoneNumber
+        customerObservation
+        appointmentDatetime
+        fixedAppointmentDatetime
+        client{
+            id
+            name
+        }
+        hardware{
+          id
+          brand
+          model
+          type
+        }
+
+      }
+    }
+  }
+`;
+
+
+export const CREATE_ROAD_ENTRY = gql`
+  mutation CreateRoadEntry($customerObservation: String!, $clientId: String!, $appointmentDatetime: String, $phoneNumber: String!, $fixedAppointmentDatetime: String, $address: String!,  $hardwareId: String!,  $userId: String!){
+    createRoadentry(customerObservation: "", clientId: "4", appointmentDatetime: "2020-02-29T23:44:41+00:00", phoneNumber: "232443", fixedAppointmentDatetime: "2020-02-29T23:44:41+00:00", address: "ddfd", hardwareId: "40", userId: "1"){
+    ok
+    roadentry{
+      id
+    }
+  }
+  }
+  
+`;
+/*createRoadentry(customerObservation: $customerObservation, clientId: $clientId, appointmentDatetime: $appointmentDatetime, phoneNumber: $phoneNumber, fixedAppointmentDatetime: $fixedAppointmentDatetime, address: $address, hardwareId: $hardwareId, userId: $userId)
+  ok
+  roadentry{
+      id
+      client{
+          id
+          name
+      }
+      address
+      phoneNumber
+      customerObservation
+      appointmentDatetime
+      fixedAppointmentDatetime
+      hardware{
+        id
+        brand
+        model
+        type
+      }
+      datetime
+    }
+  }  */
+
+
+export const GET_ROAD_ENTRY_BY_ID = gql`
+    query RoadEntry($id: String){
+      roadentry(id: $id){
+        id
+        client{
+          id
+          name
+        }
+        user{
+          username
+        }
+        address
+        phoneNumber
+        customerObservation
+        appointmentDatetime
+        fixedAppointmentDatetime
+        hardware{
+          id
+          brand
+          model
+          type
+          serialNumber
+        }
+      }
+    }
+`;
+
+export const GET_USERS = gql`
+  query{
+    users{
+      id
+      username
     }
   }
 `;
