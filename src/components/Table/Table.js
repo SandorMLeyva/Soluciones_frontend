@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 // @material-ui/core components
-import { makeStyles, useTheme } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
@@ -17,6 +17,7 @@ import LastPageIcon from '@material-ui/icons/LastPage';
 import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
+import DetailsIcon from '@material-ui/icons/DetailsOutlined';
 
 import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
@@ -42,7 +43,6 @@ const useStyles1 = makeStyles(theme => ({
 
 function TablePaginationActions(props) {
   const classes = useStyles1();
-  const theme = useTheme();
   const { count, page, rowsPerPage, onChangePage } = props;
 
   const handleFirstPageButtonClick = event => {
@@ -101,7 +101,7 @@ TablePaginationActions.propTypes = {
 
 export default function CustomTable(props) {
   const classes = useStyles();
-  const { tableHead, tableData, tableHeaderColor, editable, editForm, add, onAddRow, onEditRow, onDeleteRow, addForm } = props;
+  const { tableHead, tableData, tableHeaderColor, editable, add, onEditRow, onDeleteRow, addForm, urlDetails } = props;
   const [openAddDialog, setOpenAddDialog] = React.useState(false);
   const [openDialog, setOpenDialog] = React.useState(false);
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(false);
@@ -114,7 +114,7 @@ export default function CustomTable(props) {
     () => {
       setRows(tableData.slice(page, rowsPerPage))
     },
-    [tableData],
+    [tableData, page, rowsPerPage],
   );
 
   const handleChangePage = (event, newPage) => {
@@ -157,9 +157,6 @@ export default function CustomTable(props) {
     setOpenDialog(false);
     onEditRow(object);
   }
-  const handleCancel = () => {
-    setOpenDialog(false);
-  }
 
   const handleAddSave = () => {
     setOpenAddDialog(false);
@@ -173,13 +170,13 @@ export default function CustomTable(props) {
     setOpenAddDialog(true);
   }
 
-  
+
 
   const handleUpdateClose = () => {
     setOpenDialog(false);
   }
 
- 
+
   return (
     <div className={classes.tableResponsive}>
       {add && <div style={{ position: 'absolute', right: ' 8vw', top: ' -15px', zIndex: '5' }}>
@@ -216,6 +213,14 @@ export default function CustomTable(props) {
               ))}
               {editable &&
                 <TableCell className={classes.tableCell}>
+                  <a href={`${urlDetails}/${prop.id}`}>
+                    <IconButton
+                      aria-label="details"
+                      className={classes.margin}
+                    >
+                      <DetailsIcon fontSize="small" />
+                    </IconButton>
+                  </a>
                   <IconButton
                     aria-label="edit"
                     className={classes.margin}
@@ -274,7 +279,7 @@ export default function CustomTable(props) {
           update: update
         }}
       />
-      
+
       <Dialog
         open={openDeleteDialog}
         onClose={handleCloseDeleteDialog}
@@ -306,16 +311,15 @@ CustomTable.propTypes = {
   editable: PropTypes.bool,
   onDeleteRow: PropTypes.func,
   onEditRow: PropTypes.func,
-  onAddRow: PropTypes.func,
   add: PropTypes.bool,
-  addForm: PropTypes.any
+  addForm: PropTypes.any,
+  urlDetails: PropTypes.string
 };
 
 CustomTable.defaultProps = {
   tableHeaderColor: "gray",
   editable: false,
   add: true,
-  onAddRow: () => console.log("onAddRow not implemented"),
   onEditRow: () => console.log("onEditRow not implemented"),
   onDeleteRow: () => console.log("onDeleteRow not implemented"),
 

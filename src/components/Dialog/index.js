@@ -7,10 +7,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
-import Typography from '@material-ui/core/Typography';
 import CloseIcon from '@material-ui/icons/Close';
-import Slide from '@material-ui/core/Slide';
-import Button from '@material-ui/core/Button';
 
 
 const useStyles = makeStyles(theme => ({
@@ -23,9 +20,6 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-const Transition = React.forwardRef(function Transition(props, ref) {
-    return <Slide direction="up" ref={ref} {...props} />;
-});
 
 export default function SimpleDialog(props) {
     const { open, title, ChildComponent, childProps, handleClose, fullScreen } = props;
@@ -54,7 +48,7 @@ SimpleDialog.propTypes = {
     ChildComponent: PropTypes.any.isRequired,
     childProps: PropTypes.any.isRequired,
     handleClose: PropTypes.func,
-    fullScreen: PropTypes.bool
+    fullScreen: PropTypes.bool,
 };
 
 SimpleDialog.defaultProps = {

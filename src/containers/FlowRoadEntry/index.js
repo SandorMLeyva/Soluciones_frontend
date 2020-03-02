@@ -7,7 +7,7 @@ import Step from '@material-ui/core/Step';
 import StepButton from '@material-ui/core/StepButton';
 import FormClient from 'containers/FormClient';
 import FormHardware from 'containers/FormHardware';
-import FormEntry from 'containers/FormEntry';
+import FormRoadEntry from 'containers/FormRoadEntry';
 import CustomInput from "components/CustomInput/CustomInput.js";
 import { MenuItem } from "@material-ui/core";
 
@@ -23,7 +23,7 @@ import AddIcon from '@material-ui/icons/Add';
 import CheckIcon from '@material-ui/icons/Check';
 
 
-import { GET_CLIENTS_NAME, GET_WORKSHOP_ENTRY_BY_ID } from 'Query';
+import { GET_CLIENTS_NAME, GET_ROAD_ENTRY_BY_ID } from 'Query';
 import { useQuery } from "@apollo/react-hooks";
 import { Client } from "config";
 
@@ -49,7 +49,7 @@ function getSteps() {
 }
 
 
-export default function FlowWorkshopEntry(props) {
+export default function FlowRoadEntry(props) {
     const { onFinish, update } = props;
 
     const classes = useStyles();
@@ -66,20 +66,21 @@ export default function FlowWorkshopEntry(props) {
     React.useEffect(() => {
         if (update) {
             Client.query({
-                query: GET_WORKSHOP_ENTRY_BY_ID,
+                query: GET_ROAD_ENTRY_BY_ID,
                 variables: { id: update.id }
             }).then(({ loading, error, data }) => {
-                setClient(data.entry.client.id);
-                setObject2(data.entry.hardware);
+                console.log(data);
+                setClient(data.roadentry.client.id);
+                setObject2(data.roadentry.hardware);
                 setObject3({
-                    ...data.entry,
-                    clientId: data.entry.client.id,
-                    hardwareId: data.entry.hardware.id
+                    ...data.roadentry,
+                    clientId: data.roadentry.client.id,
+                    hardwareId: data.roadentry.hardware.id
                 });
             });
 
         }
-
+    
     }, [update])
 
     const { loading, error, data } = useQuery(GET_CLIENTS_NAME);
@@ -205,7 +206,7 @@ export default function FlowWorkshopEntry(props) {
                     });
                 }} autoClean={false} />;
             case 2:
-                return <FormEntry update={object3} onSave={(obj) => {
+                return <FormRoadEntry update={object3} onSave={(obj) => {
                     handleComplete();
                     setObject3(obj);
                 }} />;
@@ -230,12 +231,12 @@ export default function FlowWorkshopEntry(props) {
     );
 }
 
-FlowWorkshopEntry.propTypes = {
+FlowRoadEntry.propTypes = {
     onFinish: PropTypes.func,
     update: PropTypes.any
 };
 
-FlowWorkshopEntry.defaultProps = {
+FlowRoadEntry.defaultProps = {
     onFinish: () => console.log("onFinish not implemented"),
     update: false
 
