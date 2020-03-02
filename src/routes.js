@@ -31,9 +31,11 @@ import WorkshopEntry from "views/WorkshopEntry";
 import RoadEntry from "views/RoadEntry";
 import Maps from "views/Maps/Maps.js";
 import NotificationsPage from "views/Notifications/Notifications.js";
+import RoadEntryDetail from "views/RoadEntryDetails";
+import EntryDetail from "views/EntryDetails";
 // core components/views for RTL layout
 
-const dashboardRoutes = [
+export const navBar = [
   {
     path: "inicio",
     name: "Dashboard",
@@ -83,14 +85,21 @@ const dashboardRoutes = [
     component: Icons,
     layout: "/"
   },
-  // {
-  //   path: "/notifications",
-  //   name: "Notifications",
-  //   rtlName: "إخطارات",
-  //   icon: Notifications,
-  //   component: NotificationsPage,
-  //   layout: "/admin"
-  // },
+  
 ];
 
-export default dashboardRoutes;
+const routes = [
+  {
+    path: "detalle/taller/:id",
+    component: EntryDetail,
+    layout: "/"
+  },
+  {
+    path: "detalle/calle/:id",
+    component: RoadEntryDetail,
+    layout: "/"
+  },
+  ...navBar
+];
+
+export default routes;
