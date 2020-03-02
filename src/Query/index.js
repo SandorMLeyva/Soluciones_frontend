@@ -230,7 +230,7 @@ export const DELETE_ROAD_ENTRY = gql`
 `;
 
 export const UPDATE_ROAD_ENTRY = gql`
-  mutation UpdateRoadEntry($userId: String!, $customerObservation: String!, $clientId: String!, $appointmentDatetime: String, $phoneNumber: String!, $fixedAppointmentDatetime: String,  $address: String!,  $hardwareId: String!, $id: String!){
+  mutation UpdateRoadEntry($userId: String, $customerObservation: String, $clientId: String, $appointmentDatetime: String, $phoneNumber: String, $fixedAppointmentDatetime: String,  $address: String,  $hardwareId: String, $id: String!){
     updateRoadentry(userId: $userId, customerObservation: $customerObservation, clientId: $clientId, appointmentDatetime: $appointmentDatetime, phoneNumber: $phoneNumber, fixedAppointmentDatetime: $fixedAppointmentDatetime, address: $address, hardwareId: $hardwareId, id: $id){
       ok
       roadentry{
@@ -249,6 +249,10 @@ export const UPDATE_ROAD_ENTRY = gql`
           brand
           model
           type
+        }
+        user{
+          id
+          username
         }
 
       }

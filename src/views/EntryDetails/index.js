@@ -1,19 +1,11 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-
-import { useQuery, useMutation } from "@apollo/react-hooks";
-import FlowRoadEntry from "containers/FlowRoadEntry";
+import { useQuery } from "@apollo/react-hooks";
 import { GET_WORKSHOP_ENTRY_BY_ID } from "Query";
-
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
-import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import ListItemText from '@material-ui/core/ListItemText';
-import Avatar from '@material-ui/core/Avatar';
-import BeachAccessIcon from '@material-ui/icons/BeachAccess';
 import Divider from '@material-ui/core/Divider';
-import Typography from '@material-ui/core/Typography';
-import RegularButton from "components/CustomButtons/Button";
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -49,7 +41,7 @@ export default function RoadEntryDetail(props) {
             <ListItem>
                 <ListItemText primary={entry.client.name} secondary={entry.phoneNumber} />
             </ListItem>
-                <div className={classes.description}><h6>Condiciones de entrada: </h6><p>{entry.entryConditions}</p></div>
+            <div className={classes.description}><h6>Condiciones de entrada: </h6><p>{entry.entryConditions}</p></div>
             <ListItem>
                 <ListItemText primary="Dirección" secondary={entry.address} />
             </ListItem>
@@ -59,9 +51,9 @@ export default function RoadEntryDetail(props) {
                 <ListItemText secondary={`Modelo: ${entry.hardware.model}`} />
             </ListItem>
             <Divider component="li" variant="inset" />
+
             <ListItem>
-                {entry.user?<ListItemText primary={"Técnico"} secondary={entry.user.username} />: <RegularButton>Agregar Técnico</RegularButton>}
-                
+                <ListItemText primary={"Agregado por"} secondary={entry.user ? entry.user.username : ""} />
             </ListItem>
         </List>
     );

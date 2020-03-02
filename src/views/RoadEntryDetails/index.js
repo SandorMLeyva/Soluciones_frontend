@@ -1,9 +1,7 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-
 import { useQuery, useMutation } from "@apollo/react-hooks";
 import { GET_ROAD_ENTRY_BY_ID } from "Query";
-
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
@@ -34,11 +32,11 @@ export default function RoadEntryDetail(props) {
     const classes = useStyles();
     const { match: { params: { id } } } = props;
 
-    const [openDialog, setOpenDialog] = React.useState(false);
-    const handleCloseDialog = () => {
-        setOpenDialog(false);
-    };
-
+    // const [openDialog, setOpenDialog] = React.useState(false);
+    // const handleCloseDialog = () => {
+    //     setOpenDialog(false);
+    // };
+    // const [handleMutation] = useMutation(UPDATE_ROAD_ENTRY);
     const { loading, error, data } = useQuery(GET_ROAD_ENTRY_BY_ID, {
         variables: { id: id }
     });
@@ -46,6 +44,23 @@ export default function RoadEntryDetail(props) {
     if (error) return <p>No se encontro esta entrada</p>;
 
     const { roadentry } = data;
+
+
+
+
+    // const handleClickGuardar = (userId) => {
+
+    //     handleMutation({
+    //         variables: {
+    //             userId: userId,
+    //             id: id
+    //         }
+    //     }).then(({ data }) => {
+    //         handleCloseDialog();
+    //     }).catch((err) => {
+    //         console.log(err);
+    //     });
+    // }
 
     return (
         <React.Fragment>
@@ -64,20 +79,20 @@ export default function RoadEntryDetail(props) {
                 </ListItem>
                 <Divider component="li" variant="inset" />
                 <ListItem>
-                    {roadentry.user ? <ListItemText primary={"Técnico"} secondary={roadentry.user.username} /> : <RegularButton onClick={() => setOpenDialog(true)}>Agregar Técnico</RegularButton>}
+                    <ListItemText primary={"Agregado por"} secondary={roadentry.user ? roadentry.user.username : ""} />
                 </ListItem>
 
             </List>
-            <Dialog
+            {/* <Dialog
                 open={openDialog}
                 handleClose={handleCloseDialog}
                 title={"Seleccionar técnico"}
                 ChildComponent={FormSelectUser}
                 childProps={{
-                    onCancel: handleCloseDialog
-                    
+                    onCancel: handleCloseDialog,
+                    onSave: handleClickGuardar
                 }}
-            />
+            /> */}
         </React.Fragment>
     );
 }

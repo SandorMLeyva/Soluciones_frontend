@@ -47,24 +47,25 @@ const FormRoadEntry = (props) => {
 
 
     useEffect(() => {
+        console.log(update);
         if (update) {
             setCustomerObservation(update.customerObservation ? update.customerObservation : "");
             setId(update.id ? update.id : "");
             setPhone(update.phoneNumber ? update.phoneNumber : "");
-            setClient(update.client ? update.client.id : "");
-            setHardware(update.hardware ? update.hardware.id : "");
+            setClient(update.clientId ? update.clientId : "");
+            setHardware(update.hardwareId ? update.hardwareId : "");
             setAddress(update.address ? update.address : "");
             setAppoimentDate(update.appoimentDate ? update.appoimentDate : "");
         }
     }, [update]);
     const [handleMutation] = useMutation(id ? UPDATE_ROAD_ENTRY : CREATE_ROAD_ENTRY, {
         update(cache, { data }) {
-            const { roadentry } = cache.readQuery({ query: GET_ROAD_ENTRIES });
+            const { roadentries } = cache.readQuery({ query: GET_ROAD_ENTRIES });
 
             if (!id) {
                 cache.writeQuery({
                     query: GET_ROAD_ENTRIES,
-                    data: { roadentry: roadentry.concat(data.createRoadentry.roadentry) }
+                    data: { roadentries: roadentries.concat(data.createRoadentry.roadentry) }
                 });
             }
 
@@ -99,10 +100,10 @@ const FormRoadEntry = (props) => {
                 clientId: client,
                 hardwareId: hardware,
                 // TODO: date format YYYY-MM-DD HH:MM[:ss[.uuuuuu]][TZ]
-                appointmentDatetime: "2020-02-27 23:03:59",
-                // appointmentDatetime: appoimentDate,
-                fixedAppointmentDatetime: "2020-02-27 23:03:59",
-                // fixedAppointmentDatetime: appoimentDate,
+                // appointmentDatetime: "2020-02-27 23:03:59",
+                appointmentDatetime: appoimentDate,
+                // fixedAppointmentDatetime: "2020-02-27 23:03:59",
+                fixedAppointmentDatetime: appoimentDate,
                 address: address
             }
         }).then(({ data }) => {
@@ -171,7 +172,7 @@ const FormRoadEntry = (props) => {
                 <GridContainer>
                     <GridItem xs={12} sm={12} md={12}>
                         <CustomInput
-                            labelText="Observacopnes del cliente"
+                            labelText="Observaciones del cliente"
                             formControlProps={{
                                 fullWidth: true
                             }}
@@ -187,8 +188,7 @@ const FormRoadEntry = (props) => {
                 <GridContainer>
                     <GridItem xs={12} sm={12} md={4}>
                         <DayPickerInput onDayChange={day => {
-                            let a = moment(new Date(day)).format("YYYY-MM-DD HH:MM:ss");
-                            console.log(a);
+                            let a = moment(new Date(day)).format("YYYY-MM-DD HH:mm:ss");
                             setAppoimentDate(a);
                         }} value={appoimentDate} />
                     </GridItem>
