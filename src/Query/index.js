@@ -30,6 +30,7 @@ export const GET_WORKSHOP_ENTRY_BY_ID = gql`
           name
         }
         user{
+          id
           username
         }
         phoneNumber
@@ -201,11 +202,13 @@ export const GET_ROAD_ENTRIES = gql`
     roadentries{
       id
       client{
+        id
         name
       }
       address
       phoneNumber
       hardware{
+        id
         brand
         model
         type
@@ -255,38 +258,31 @@ export const UPDATE_ROAD_ENTRY = gql`
 
 
 export const CREATE_ROAD_ENTRY = gql`
-  mutation CreateRoadEntry($customerObservation: String!, $clientId: String!, $appointmentDatetime: String, $phoneNumber: String!, $fixedAppointmentDatetime: String, $address: String!,  $hardwareId: String!,  $userId: String!){
-    createRoadentry(customerObservation: "", clientId: "4", appointmentDatetime: "2020-02-29T23:44:41+00:00", phoneNumber: "232443", fixedAppointmentDatetime: "2020-02-29T23:44:41+00:00", address: "ddfd", hardwareId: "40", userId: "1"){
+  mutation CreateRoadEntry($userId: String!, $customerObservation: String!, $clientId: String!, $appointmentDatetime: String, $phoneNumber: String!, $fixedAppointmentDatetime: String,  $address: String!,  $hardwareId: String!){
+    createRoadentry(userId: $userId, customerObservation: $customerObservation, clientId: $clientId, appointmentDatetime: $appointmentDatetime, phoneNumber: $phoneNumber, fixedAppointmentDatetime: $fixedAppointmentDatetime, address: $address, hardwareId: $hardwareId){
     ok
     roadentry{
-      id
+      id       
+        address
+        phoneNumber
+        customerObservation
+        appointmentDatetime
+        fixedAppointmentDatetime
+        client{
+            id
+            name
+        }
+        hardware{
+          id
+          brand
+          model
+          type
+        }
     }
   }
   }
   
 `;
-/*createRoadentry(customerObservation: $customerObservation, clientId: $clientId, appointmentDatetime: $appointmentDatetime, phoneNumber: $phoneNumber, fixedAppointmentDatetime: $fixedAppointmentDatetime, address: $address, hardwareId: $hardwareId, userId: $userId)
-  ok
-  roadentry{
-      id
-      client{
-          id
-          name
-      }
-      address
-      phoneNumber
-      customerObservation
-      appointmentDatetime
-      fixedAppointmentDatetime
-      hardware{
-        id
-        brand
-        model
-        type
-      }
-      datetime
-    }
-  }  */
 
 
 export const GET_ROAD_ENTRY_BY_ID = gql`
@@ -298,6 +294,7 @@ export const GET_ROAD_ENTRY_BY_ID = gql`
           name
         }
         user{
+          id
           username
         }
         address
