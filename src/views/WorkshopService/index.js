@@ -9,10 +9,13 @@ import Card from "components/Card/Card.js";
 import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
 import { useQuery, useMutation } from "@apollo/react-hooks";
+import CustomInput from "components/CustomInput/CustomInput.js";
+import { MenuItem } from "@material-ui/core";
 
 import moment from "moment";
-import { GET_WORKSHOP_ENTRIES, DELETE_ENTRY } from "Query";
+import { GET_WORKSHOP_SERVICES, DELETE_ENTRY } from "Query";
 import FlowWorkshopEntry from "containers/FlowWorkshopEntry";
+import _ from "lodash";
 
 
 const styles = {
@@ -47,30 +50,41 @@ const styles = {
 
 const useStyles = makeStyles(styles);
 
-
-
-export default function TableList() {
+export default function Services() {
     const classes = useStyles();
+
+    const [state, setState] = React.useState("ALL");
     const [handleDelete] = useMutation(DELETE_ENTRY, {
         update(cache, { data: { deleteEntry } }) {
-            const { entries } = cache.readQuery({ query: GET_WORKSHOP_ENTRIES });
+            const { entries } = cache.readQuery({ query: GET_WORKSHOP_SERVICES });
             cache.writeQuery({
-                query: GET_WORKSHOP_ENTRIES,
-                data: { entries: entries.filter(e=>e.id !== deleteEntry.entry.id) }
+                query: GET_WORKSHOP_SERVICES,
+                data: { entries: entries.filter(e => e.id !== deleteEntry.entry.id) }
             });
         }
     }
     );
-    const { loading, error, data } = useQuery(GET_WORKSHOP_ENTRIES);
+    const { loading, error, data } = useQuery(GET_WORKSHOP_SERVICES);
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error...</p>;
 
-    const tableData = data.entries.map(item => ({
+    const price = (fix) => {
+        if (fix) {
+            let value = Number.parseFloat(fix.basePrice);
+            let pieces_value = fix.pieces ? fix.pieces.map(e => Number.parseFloat(e.price)) : [];
+            let otherPieces_value = fix.otherPieces ? fix.otherPieces.map(e => Number.parseFloat(e.price)) : [];
+            value += _.sum(pieces_value) + _.sum(otherPieces_value);
+            return value;
+        }
+        return 0;
+    }
+    
+    const tableData = data.services.filter(item => state === "ALL" ? true : item.state === state).map(item => ({
         id: item.id,
-        client: item.client.name,
-        phone: item.phoneNumber,
-        hardware: item.hardware.brand,
-        date: moment(item.datetime).format("DD-MM-YYYY")
+        user: item.user ? item.user.username : "No tiene asignado técnico",
+        client: item.entry.client.name,
+        hardware: `${item.entry.hardware.type} ${item.entry.hardware.brand} `,
+        price: price(item.fix)
     }));
 
     return (
@@ -78,12 +92,32 @@ export default function TableList() {
             <GridItem xs={12} sm={12} md={12}>
                 <Card>
                     <CardHeader color="primary">
-                        <h4 className={classes.cardTitleWhite}>Trabajos en el taller</h4>
+                        <h4 className={classes.cardTitleWhite}>Servicios en el taller</h4>
                         <p className={classes.cardCategoryWhite}>
-                            Listado de trabajos pendientes
+                            Listado de servicios
                                         </p>
                     </CardHeader>
                     <CardBody>
+                        <CustomInput
+                            labelText="Estado"
+                            formControlProps={{
+                                fullWidth: true
+                            }}
+                            inputProps={{
+                                autoWidth: true,
+                                value: state,
+                                onChange: ({ target }) => setState(target.value)
+                            }}
+                            select
+                        >
+                            <MenuItem value="ALL">Todos los estados</MenuItem>
+                            <MenuItem value="UPEN">Pendiente sin Asignar</MenuItem>
+                            <MenuItem value="APEN">Pendiente Asignado</MenuItem>
+                            <MenuItem value="PROC">En Proceso</MenuItem>
+                            <MenuItem value="FIN">Finalizado</MenuItem>
+                            <MenuItem value="WARR">Garantía</MenuItem>
+                            <MenuItem value="NO_WARR">Sin Garantía</MenuItem>
+                        </CustomInput>
                         <Table
                             tableHeaderColor="primary"
                             tableHead={[
@@ -92,21 +126,22 @@ export default function TableList() {
                                     id: "client"
                                 },
                                 {
-                                    name: "Teléfono",
-                                    id: "phone"
-                                },
-                                {
-                                    name: "Hardware",
+                                    name: "Equipo",
                                     id: "hardware"
                                 },
                                 {
-                                    name: "Fecha",
-                                    id: "date"
+                                    name: "Técnico",
+                                    id: "user"
+                                },
+                                {
+                                    name: "Precio",
+                                    id: "price"
                                 }
                             ]}
                             tableData={tableData}
                             editable={true}
-                            addForm={FlowWorkshopEntry}
+                            // addForm={FlowWorkshopEntry}
+                            add={false}
                             onDeleteRow={handleDelete}
                             urlDetails={"/detalle/servicio/taller"}
                         />

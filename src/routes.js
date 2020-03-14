@@ -29,10 +29,9 @@ import Typography from "views/Typography/Typography.js";
 import Icons from "views/Icons/Icons.js";
 import WorkshopEntry from "views/WorkshopEntry";
 import RoadEntry from "views/RoadEntry";
-import Maps from "views/Maps/Maps.js";
-import NotificationsPage from "views/Notifications/Notifications.js";
 import RoadEntryDetail from "views/RoadEntryDetails";
 import EntryDetail from "views/EntryDetails";
+import Services from "views/WorkshopService";
 // core components/views for RTL layout
 
 export const navBar = [
@@ -55,6 +54,13 @@ export const navBar = [
     name: "Trabajos en la Calle",
     icon: Person,
     component: RoadEntry,
+    layout: "/"
+  },
+  {
+    path: "servicios",
+    name: "Servicios",
+    icon: "content_paste",
+    component: Services,
     layout: "/"
   },
   {

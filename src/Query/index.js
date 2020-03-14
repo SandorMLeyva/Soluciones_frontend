@@ -325,3 +325,40 @@ export const GET_USERS = gql`
     }
   }
 `;
+
+export const GET_WORKSHOP_SERVICES = gql`
+  query{
+  services{
+    id
+    user{
+      username
+      id
+    }
+    state
+    entry{
+      id
+      client{
+        id
+        name
+      }
+      hardware{
+        id
+        type
+        brand
+      }
+    }
+    staffAnnotations
+    date
+    fix{
+      id
+      basePrice
+      pieces{
+       	  price
+      }
+      otherPieces{
+        price
+      }
+    }
+  }
+}
+`;
