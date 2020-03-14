@@ -211,6 +211,8 @@ export default function CustomTable(props) {
                   {prop[head.id]}
                 </TableCell>
               ))}
+              {prop.color ? <TableCell className={classes.tableCell} style={{ backgroundColor: prop.color }}>
+              </TableCell> : null}
               {editable &&
                 <TableCell className={classes.tableCell}>
                   <a href={`${urlDetails}/${prop.id}`}>
