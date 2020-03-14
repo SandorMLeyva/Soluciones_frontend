@@ -10,10 +10,12 @@ import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
 import CardFooter from "components/Card/CardFooter.js";
 
-import DayPickerInput from "react-day-picker/DayPickerInput";
-import "react-day-picker/lib/style.css";
-import TimePicker from "rc-time-picker";
-import "rc-time-picker/assets/index.css";
+// import DayPickerInput from "react-day-picker/DayPickerInput";
+// import "react-day-picker/lib/style.css";
+// import TimePicker from "rc-time-picker";
+// import "rc-time-picker/assets/index.css";
+
+import InputMoment from "input-moment";
 
 import PropTypes from "prop-types";
 import { UPDATE_ROAD_ENTRY, CREATE_ROAD_ENTRY, GET_ROAD_ENTRIES } from "Query"
@@ -83,7 +85,7 @@ const FormRoadEntry = (props) => {
             setAppoimentDate("");
         }
     }
-    
+
 
     const handleClickGuardar = () => {
         if (!phone) {
@@ -110,7 +112,7 @@ const FormRoadEntry = (props) => {
             console.log(data)
             autoCleanStates();
             onSave(id ? data.updateRoadentry.roadentry : data.createRoadentry.roadentry);
-        }).catch((err)=>{
+        }).catch((err) => {
             console.log(err);
         });
     }
@@ -187,6 +189,12 @@ const FormRoadEntry = (props) => {
                 </GridContainer>
                 <GridContainer>
                     <GridItem xs={12} sm={12} md={4}>
+                       <InputMoment
+                        moment={moment}
+                        onChange={(date)=> console.log(date)}
+                       />
+                    </GridItem>
+                    {/* <GridItem xs={12} sm={12} md={4}>
                         <DayPickerInput onDayChange={day => {
                             let a = moment(new Date(day)).format("YYYY-MM-DD HH:mm:ss");
                             setAppoimentDate(a);
@@ -200,7 +208,7 @@ const FormRoadEntry = (props) => {
                             use12Hours
                             inputReadOnly
                         />
-                    </GridItem>
+                    </GridItem> */}
                 </GridContainer>
             </CardBody>
             <CardFooter>

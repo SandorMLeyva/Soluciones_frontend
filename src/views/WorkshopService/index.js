@@ -108,7 +108,7 @@ export default function TableList() {
                             editable={true}
                             addForm={FlowWorkshopEntry}
                             onDeleteRow={handleDelete}
-                            urlDetails={"/detalle/taller"}
+                            urlDetails={"/detalle/servicio/taller"}
                         />
                     </CardBody>
                 </Card>
