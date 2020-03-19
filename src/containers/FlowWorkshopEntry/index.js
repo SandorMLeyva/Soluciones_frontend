@@ -8,6 +8,8 @@ import StepButton from '@material-ui/core/StepButton';
 import FormClient from 'containers/FormClient';
 import FormHardware from 'containers/FormHardware';
 import FormEntry from 'containers/FormEntry';
+import FormService from 'containers/FormService'
+
 import CustomInput from "components/CustomInput/CustomInput.js";
 import { MenuItem } from "@material-ui/core";
 
@@ -45,7 +47,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 function getSteps() {
-    return ['Selecciona cliente', 'Crea Equipo', 'Crea Entrada'];
+    return ['Selecciona cliente', 'Crea Equipo', 'Crea Entrada', 'Crea Servicio'];
 }
 
 
@@ -62,6 +64,7 @@ export default function FlowWorkshopEntry(props) {
     const [client, setClient] = React.useState({})
     const [object2, setObject2] = React.useState({})
     const [object3, setObject3] = React.useState({})
+    const [object4, setObject4] = React.useState({})
 
     React.useEffect(() => {
         if (update) {
@@ -74,6 +77,11 @@ export default function FlowWorkshopEntry(props) {
                 setObject3({
                     ...data.entry,
                     clientId: data.entry.client.id,
+                    hardwareId: data.entry.hardware.id
+                });
+                setObject4({
+                    ...data.entry,
+                    entryId: data.entry.client.id,
                     hardwareId: data.entry.hardware.id
                 });
             });
@@ -125,9 +133,6 @@ export default function FlowWorkshopEntry(props) {
         setCompleted(newCompleted);
         handleNext();
     };
-
-
-
 
     const getStepContent = (step) => {
         switch (step) {
@@ -208,6 +213,15 @@ export default function FlowWorkshopEntry(props) {
                 return <FormEntry update={object3} onSave={(obj) => {
                     handleComplete();
                     setObject3(obj);
+                    setObject4({
+                        ...object4,
+                        entryId: obj.id
+                    });
+                }} />;
+            case 3:
+                return <FormService update={object4} onSave={(obj) => {
+                    handleComplete();
+                    setObject4(obj);
                 }} />;
             default:
                 return onFinish();

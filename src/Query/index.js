@@ -326,6 +326,46 @@ export const GET_USERS = gql`
   }
 `;
 
+export const CREATE_SERVICE = gql`
+  mutation CreateService($entryId: String!, $userId: String, $state: String, $datetime: String, $fixId: String, $staffAnnotations: String){
+  createService(entryId: $entryId, userId: $userId, state: $state, datetime: $datetime, fixId: $fixId, staffAnnotations: $staffAnnotations){
+    ok
+    service{
+      id
+      user{
+        username
+        id
+      }
+      state
+      entry{
+        id
+        client{
+          id
+          name
+        }
+        hardware{
+          id
+          type
+          brand
+        }
+      }
+      staffAnnotations
+      date
+      fix{
+        id
+        basePrice
+        pieces{
+            price
+        }
+        otherPieces{
+          price
+        }
+      }
+    }
+  }
+}
+`;
+
 export const GET_WORKSHOP_SERVICES = gql`
   query{
   services{
@@ -361,4 +401,58 @@ export const GET_WORKSHOP_SERVICES = gql`
     }
   }
 }
+`;
+
+
+export const UPDATE_SERVICE = gql`
+  mutation UpdateService($entryId: String, $userId: String, $state: String, $datetime: String, $fixId: String, $staffAnnotations: String, $id: String!){
+    updateService(entryId: $entryId, userId: $userId, state: $state, datetime: $datetime, fixId: $fixId, staffAnnotations: $staffAnnotations, id: $id){
+    ok
+    service{
+      id
+      user{
+        username
+        id
+      }
+      state
+      entry{
+        id
+        client{
+          id
+          name
+        }
+        hardware{
+          id
+          type
+          brand
+        }
+      }
+      staffAnnotations
+      date
+      fix{
+        id
+        basePrice
+        pieces{
+            price
+        }
+        otherPieces{
+          price
+        }
+      }
+    }
+  }
+}
+`;
+
+
+
+export const DELETE_SERVICE = gql`
+  mutation DeleteService($id:String!){
+    deleteService(id: $id){
+      ok
+      service{
+        id
+      }
+    }
+  }
 `;

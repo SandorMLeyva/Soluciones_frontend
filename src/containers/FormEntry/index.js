@@ -47,17 +47,17 @@ const FormEntry = (props) => {
         }
     }, [update]);
     const [handleMutation] = useMutation(id ? UPDATE_ENTRY : CREATE_ENTRY, {
-        update(cache, { data }) {
-            const { entries } = cache.readQuery({ query: GET_WORKSHOP_ENTRIES });
+        // update(cache, { data }) {
+        //     const { entries } = cache.readQuery({ query: GET_WORKSHOP_ENTRIES });
 
-            if (!id) {
-                cache.writeQuery({
-                    query: GET_WORKSHOP_ENTRIES,
-                    data: { entries: entries.concat(data.createEntry.entry) }
-                });
-            }
+        //     if (!id) {
+        //         cache.writeQuery({
+        //             query: GET_WORKSHOP_ENTRIES,
+        //             data: { entries: entries.concat(data.createEntry.entry) }
+        //         });
+        //     }
 
-        }
+        // }
     });
 
     const autoCleanStates = () => {

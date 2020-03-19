@@ -13,9 +13,10 @@ import CustomInput from "components/CustomInput/CustomInput.js";
 import { MenuItem } from "@material-ui/core";
 
 import moment from "moment";
-import { GET_WORKSHOP_SERVICES, DELETE_ENTRY } from "Query";
-import FlowWorkshopEntry from "containers/FlowWorkshopEntry";
+import { GET_WORKSHOP_SERVICES, DELETE_SERVICE } from "Query";
 import _ from "lodash";
+import { COOLORS } from "helpers"
+import FlowWorkshopEntry from "containers/FlowWorkshopEntry";
 
 
 const styles = {
@@ -54,12 +55,12 @@ export default function Services() {
     const classes = useStyles();
 
     const [state, setState] = React.useState("ALL");
-    const [handleDelete] = useMutation(DELETE_ENTRY, {
-        update(cache, { data: { deleteEntry } }) {
-            const { entries } = cache.readQuery({ query: GET_WORKSHOP_SERVICES });
+    const [handleDelete] = useMutation(DELETE_SERVICE, {
+        update(cache, { data: { deleteService } }) {
+            const { services } = cache.readQuery({ query: GET_WORKSHOP_SERVICES });
             cache.writeQuery({
                 query: GET_WORKSHOP_SERVICES,
-                data: { entries: entries.filter(e => e.id !== deleteEntry.entry.id) }
+                data: { services: services.filter(e => e.id !== deleteService.service.id) }
             });
         }
     }
@@ -78,13 +79,16 @@ export default function Services() {
         }
         return 0;
     }
-    
+
+       
     const tableData = data.services.filter(item => state === "ALL" ? true : item.state === state).map(item => ({
         id: item.id,
         user: item.user ? item.user.username : "No tiene asignado técnico",
         client: item.entry.client.name,
         hardware: `${item.entry.hardware.type} ${item.entry.hardware.brand} `,
-        price: price(item.fix)
+        price: price(item.fix),
+        date: moment(item.date).format("DD-MM-YYYY"),
+        color: COOLORS[item.state]
     }));
 
     return (
@@ -136,12 +140,16 @@ export default function Services() {
                                 {
                                     name: "Precio",
                                     id: "price"
+                                },
+                                {
+                                    name: "Fecha",
+                                    id: "date"
                                 }
                             ]}
                             tableData={tableData}
                             editable={true}
-                            // addForm={FlowWorkshopEntry}
-                            add={false}
+                            addForm={FlowWorkshopEntry}
+                            // add={false}
                             onDeleteRow={handleDelete}
                             urlDetails={"/detalle/servicio/taller"}
                         />

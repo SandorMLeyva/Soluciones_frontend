@@ -1,4 +1,4 @@
-import React, { Component, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 // @material-ui/core components
 import { MenuItem } from "@material-ui/core"
 // core components
@@ -10,6 +10,8 @@ import Card from "components/Card/Card.js";
 import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
 import CardFooter from "components/Card/CardFooter.js";
+import { GET_WORKSHOP_SERVICES, UPDATE_SERVICE, CREATE_SERVICE, GET_USERS } from "Query";
+import { useMutation, useQuery } from "@apollo/react-hooks";
 
 import PropTypes from "prop-types";
 
@@ -26,122 +28,146 @@ const styles = {
     }
 };
 
+const FormService = (props) => {
+    const { update, onSave, onCancel, autoClean } = props;
 
-export default class FormService extends Component {
+    const [user, setUser] = useState("");
+    const [state, setState] = useState("");
+    const [entry, setEntry] = useState("");
+    const [staffNotes, setStaffNotes] = useState("");
+    const [fix, setFix] = useState("");
+    const [seal, setSeal] = useState("");
+    const [id, setId] = useState("");
 
-    constructor(props) {
-        super(props);
-        const { update } = props;
+
+    useEffect(() => {
         if (update) {
-            this.state = {
-                user: update.user,
-                state: update.state,
-                staffNotes: update.staffNotes
+            setUser(update.user ? update.user.username : "");
+            setState(update.state ? update.state : "");
+            setEntry(update.entryId ? update.entryId : "");
+            setStaffNotes(update.staffAnnotations ? update.staffAnnotations : "");
+            // setFix(update.fix ? update.fix.id : "");
+            // setSeal(update.seal ? update.seal : "");
+            setId(update.id ? update.id : "");
+        }
+    }, [update]);
+    const [handleMutation] = useMutation(id ? UPDATE_SERVICE : CREATE_SERVICE, {
+        update(cache, { data }) {
+            const { services } = cache.readQuery({ query: GET_WORKSHOP_SERVICES });
+
+            if (!id) {
+                cache.writeQuery({
+                    query: GET_WORKSHOP_SERVICES,
+                    data: { services: services.concat(data.createService.service) }
+                });
             }
 
         }
-        else {
-            this.state = {
-                user: "",
-                state: "",
-                staffNotes: ""
-            }
+    });
+
+    const autoCleanStates = () => {
+        if (autoClean) {
+            setUser("");
+            setState("");
+            setEntry("");
+            setStaffNotes("");
+            // setFix("");
+            // setSeal("");
+            setId("");
         }
-
-        this.handleUser = this.handleUser.bind(this);
-        this.handleState = this.handleState.bind(this);
-        this.handleStaffNotes = this.handleStaffNotes.bind(this);
     }
 
-    handleStaffNotes(staffNotes) {
-        this.setState({
-            staffNotes: staffNotes
-        })
+
+    const handleClickGuardar = () => {
+        handleMutation({
+            variables: {
+                entryId: entry,
+                userId: user,
+                id: id,
+                state: user ? "APEN" : "UPEN",
+                staffAnnotations: staffNotes
+            }
+        }).then(({ data }) => {
+            autoCleanStates();
+            onSave(id ? data.updateService.service : data.createService.service);
+        });
     }
 
-   
-    
-    handleState(state) {
-        this.setState({
-            state: state
-        })
-    }
+    const { loading, error, data } = useQuery(GET_USERS);
+    if (loading) return <p>Loading...</p>;
+    if (error) return <p>Error...</p>;
 
-    handleUser(user) {
-        this.setState({
-            user: user
-        })
-    }
-   
+    const handleClickCancel = onCancel;
 
-    render() {
-        return (
-            <Card>
-                <CardHeader color="primary">
-                    <h4 className={styles.cardTitleWhite}>Agregar Servicio</h4>
-                </CardHeader>
-                <CardBody>
-                    <GridContainer>
-                        <GridItem xs={12} sm={12} md={6}>
-                            {/* Change for autocomplete */}
-                            <CustomInput
-                                labelText="Técnico"
-                                id="user"
-                                formControlProps={{
-                                    fullWidth: true
-                                }}
-                                inputProps={{
-                                    value: this.state.user,
-                                    onChange: (e) => this.handleUser(e.target.value),
-                                }}
-                            />
-                        </GridItem>
-                        
-                        <GridItem xs={12} sm={12} md={4}>
+    return (
+        <Card>
+            <CardHeader color="primary">
+                <h4 className={styles.cardTitleWhite}>Agregar Servicio</h4>
+            </CardHeader>
+            <CardBody>
+                <GridContainer>
+                    {/* <GridItem xs={12} sm={12} md={6}>
                         <CustomInput
-                                labelText="Estado"
-                                id="state"
-                                formControlProps={{
-                                    fullWidth: true
-                                }}
-                                inputProps={{
-                                    autoWidth: true,
-                                    value: this.state.state,
-                                    onChange: (e) => this.handleState(e.target.value)
-                                }}
-                                select
-                            >
-                                {/* TODO: Poner los estados cargados del back */}
-                                <MenuItem value="Pendiente">Pendiente</MenuItem>
-                                <MenuItem value="Asignado">Asignado</MenuItem>
-                            </CustomInput>
-                        </GridItem>
-                    </GridContainer>
+                            labelText="Técnico"
+                            id="user"
+                            formControlProps={{
+                                fullWidth: true
+                            }}
+                            inputProps={{
+                                value: user,
+                                onChange: (e) => setUser(e.target.value),
+                            }}
+                        />
+                    </GridItem> */}
 
-                    <GridContainer>
-                        <GridItem xs={12} sm={12} md={12}>
-                            <CustomInput
-                                labelText="Anotaciones"
-                                id="staff-notes"
-                                formControlProps={{
-                                    fullWidth: true
-                                }}
-                                inputProps={{
-                                    multiline: true,
-                                    rows: 5,
-                                    onChange: (e) => this.handleStaffNotes(e.target.value),
-                                    value: this.state.staffNotes
-                                }}
-                            />
-                        </GridItem>
-                    </GridContainer>
-                </CardBody>
-                <CardFooter>
-                    <Button color="primary">Guardar</Button>
-                </CardFooter>
-            </Card>
-        );
-    }
+                    <GridItem xs={12} sm={12} md={4}>
+                        <CustomInput
+                            labelText="Técnico"
+                            id="user"
+                            formControlProps={{
+                                fullWidth: true
+                            }}
+                            inputProps={{
+                                autoWidth: true,
+                                value: user,
+                                onChange: (e) => setUser(e.target.value)
+                            }}
+                            select
+                        >
+                            {data.users.map(item => (
+                                <MenuItem key={item.id} value={item.id}>{item.username}</MenuItem>
+                            ))}
+
+                        </CustomInput>
+                    </GridItem>
+                </GridContainer>
+
+                <GridContainer>
+                    <GridItem xs={12} sm={12} md={12}>
+                        <CustomInput
+                            labelText="Anotaciones"
+                            id="staff-notes"
+                            formControlProps={{
+                                fullWidth: true
+                            }}
+                            inputProps={{
+                                multiline: true,
+                                rows: 5,
+                                onChange: (e) => setStaffNotes(e.target.value),
+                                value: staffNotes
+                            }}
+                        />
+                    </GridItem>
+                </GridContainer>
+            </CardBody>
+            <CardFooter>
+                <Button color="primary" onClick={handleClickGuardar}>Guardar</Button>
+            </CardFooter>
+        </Card>
+    );
+
+
+
 }
 
 FormService.propTypes = {
@@ -150,6 +176,8 @@ FormService.propTypes = {
 FormService.defaultProps = {
     update: false
 };
+
+export default FormService;
 
 
 
