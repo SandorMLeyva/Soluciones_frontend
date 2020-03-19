@@ -32,23 +32,19 @@ const FormService = (props) => {
     const { update, onSave, onCancel, autoClean } = props;
 
     const [user, setUser] = useState("");
-    const [state, setState] = useState("");
     const [entry, setEntry] = useState("");
     const [staffNotes, setStaffNotes] = useState("");
-    const [fix, setFix] = useState("");
-    const [seal, setSeal] = useState("");
     const [id, setId] = useState("");
+    const [state, setState] = useState("");
 
 
     useEffect(() => {
         if (update) {
-            setUser(update.user ? update.user.username : "");
-            setState(update.state ? update.state : "");
+            setUser(update.userId ? update.userId : "");
             setEntry(update.entryId ? update.entryId : "");
             setStaffNotes(update.staffAnnotations ? update.staffAnnotations : "");
-            // setFix(update.fix ? update.fix.id : "");
-            // setSeal(update.seal ? update.seal : "");
             setId(update.id ? update.id : "");
+            setState(update.state ? update.state : "");
         }
     }, [update]);
     const [handleMutation] = useMutation(id ? UPDATE_SERVICE : CREATE_SERVICE, {
@@ -68,23 +64,21 @@ const FormService = (props) => {
     const autoCleanStates = () => {
         if (autoClean) {
             setUser("");
-            setState("");
             setEntry("");
             setStaffNotes("");
-            // setFix("");
-            // setSeal("");
             setId("");
         }
     }
 
 
     const handleClickGuardar = () => {
+        let xx = state !== "UPEN"? state : user ? "APEN" : "UPEN";
         handleMutation({
             variables: {
                 entryId: entry,
                 userId: user,
                 id: id,
-                state: user ? "APEN" : "UPEN",
+                state: xx,
                 staffAnnotations: staffNotes
             }
         }).then(({ data }) => {
@@ -106,19 +100,6 @@ const FormService = (props) => {
             </CardHeader>
             <CardBody>
                 <GridContainer>
-                    {/* <GridItem xs={12} sm={12} md={6}>
-                        <CustomInput
-                            labelText="Técnico"
-                            id="user"
-                            formControlProps={{
-                                fullWidth: true
-                            }}
-                            inputProps={{
-                                value: user,
-                                onChange: (e) => setUser(e.target.value),
-                            }}
-                        />
-                    </GridItem> */}
 
                     <GridItem xs={12} sm={12} md={4}>
                         <CustomInput

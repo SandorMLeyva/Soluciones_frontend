@@ -444,7 +444,45 @@ export const UPDATE_SERVICE = gql`
 }
 `;
 
-
+export const GET_SERVICE_BY_ID = gql`
+    query Service($id: String!){
+      service(id: $id){
+        id
+        user{
+          id
+          username
+        }
+        entry{
+          id
+          client{
+            id
+            name
+          }
+          user{
+            id
+            username
+          }
+          phoneNumber
+          entryConditions
+          hardware{
+            id
+            brand
+            model
+            type
+            serialNumber
+          }
+          datetime
+        }
+        fix{
+          id
+        }
+        state
+        staffAnnotations
+        date
+        sealNumber
+      }
+    }
+`;
 
 export const DELETE_SERVICE = gql`
   mutation DeleteService($id:String!){

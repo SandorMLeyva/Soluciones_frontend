@@ -25,7 +25,7 @@ import AddIcon from '@material-ui/icons/Add';
 import CheckIcon from '@material-ui/icons/Check';
 
 
-import { GET_CLIENTS_NAME, GET_WORKSHOP_ENTRY_BY_ID } from 'Query';
+import { GET_CLIENTS_NAME, GET_SERVICE_BY_ID } from 'Query';
 import { useQuery } from "@apollo/react-hooks";
 import { Client } from "config";
 
@@ -69,20 +69,22 @@ export default function FlowWorkshopEntry(props) {
     React.useEffect(() => {
         if (update) {
             Client.query({
-                query: GET_WORKSHOP_ENTRY_BY_ID,
+                query: GET_SERVICE_BY_ID,
                 variables: { id: update.id }
             }).then(({ loading, error, data }) => {
-                setClient(data.entry.client.id);
-                setObject2(data.entry.hardware);
+                setClient(data.service.entry.client.id);
+                setObject2(data.service.entry.hardware);
                 setObject3({
-                    ...data.entry,
-                    clientId: data.entry.client.id,
-                    hardwareId: data.entry.hardware.id
+                    ...data.service.entry,
+                    clientId: data.service.entry.client.id,
+                    hardwareId: data.service.entry.hardware.id
                 });
                 setObject4({
-                    ...data.entry,
-                    entryId: data.entry.client.id,
-                    hardwareId: data.entry.hardware.id
+                    entryId: data.service.entry.id,
+                    userId: data.service.user ? data.service.user.id : "",
+                    id: data.service.id,
+                    staffAnnotations: data.service.staffAnnotations,
+                    state: data.service.state
                 });
             });
 
