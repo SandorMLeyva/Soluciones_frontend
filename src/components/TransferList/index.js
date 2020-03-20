@@ -7,6 +7,8 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import Paper from '@material-ui/core/Paper';
 import Chip from '@material-ui/core/Chip';
+import PropTypes from "prop-types";
+
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -24,41 +26,16 @@ const useStyles = makeStyles(theme => ({
 }));
 
 
-export default function TransferList() {
+export default function TransferList(props) {
+    const { values } = props;
     const classes = useStyles();
-    const [left, setLeft] = React.useState([
-        {
-            id: 1,
-            name: "Transistor",
-            count: 5
-        },
-        {
-            id: 2,
-            name: "Semiconductor",
-            count: 5
-        },
-        {
-            id: 3,
-            name: "Resistencia",
-            count: 5
-        },
-        {
-            id: 4,
-            name: "Led",
-            count: 5
-        },
-        {
-            id: 5,
-            name: "Pantalla Led",
-            count: 5
-        }
-    ]);
+    const [left, setLeft] = React.useState(values);
     const [right, setRight] = React.useState([]);
 
     const handleIncrement = value => {
         let rindex = right.indexOf(right.find(e => e.id === value.id));
         let lindex = left.indexOf(left.find(e => e.id === value.id));
-        if (left[lindex].count > 0) {
+        if (left[lindex].count >= 1) {
 
             left[lindex].count--;
             setLeft([...left]);
@@ -94,6 +71,7 @@ export default function TransferList() {
             }
         }
         else {
+            left[lindex].count++;
             right.splice(rindex, 1);
             setRight([...right]);
         }
@@ -127,3 +105,16 @@ export default function TransferList() {
         </Grid>
     );
 }
+
+
+
+TransferList.propTypes = {
+    values: PropTypes.arrayOf(PropTypes.objectOf({
+        id: PropTypes.number,
+        name: PropTypes.string,
+        count: PropTypes.number
+    }))
+};
+TransferList.defaultProps = {
+    values: []
+};
