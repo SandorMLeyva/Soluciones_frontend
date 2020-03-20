@@ -503,3 +503,14 @@ export const GET_COUNT_SERVICE = gql`
   }
 
 `;
+
+export const SET_STATE_SERVICE = gql`
+    mutation SetStateService($setPrevious: Boolean!, $serviceId: String!){
+      setStateService(setPrevious: $setPrevious, serviceId: $serviceId){
+        service{
+          id
+          state
+        }
+      }
+    }
+`;
