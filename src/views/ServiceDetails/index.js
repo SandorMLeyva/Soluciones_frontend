@@ -56,12 +56,12 @@ export default function ServiceDetail(props) {
 
     return (
         <React.Fragment>
-            <div style={{ position: 'absolute', top: '21vh', right: '6vw', zIndex: '1' }}>
+            <div style={{ position: 'absolute', top: '23vh', right: '6vw', zIndex: '1' }}>
                 <Fab color="primary" aria-label="edit" onClick={handleOpenDialog}>
                     <EditIcon />
                 </Fab>
             </div>
-            <div style={{ position: 'absolute', top: '21vh', right: '12vw', zIndex: '1' }}>
+            <div style={{ position: 'absolute', top: '23vh', right: '12vw', zIndex: '1' }}>
                 <Fab color="primary" aria-label="edit" onClick={handleOpenDialog}>
                     <BuildIcon />
                 </Fab>

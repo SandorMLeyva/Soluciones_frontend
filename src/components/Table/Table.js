@@ -24,6 +24,7 @@ import AddIcon from '@material-ui/icons/Add';
 
 import Dialog from 'components/Dialog';
 import Ask from 'components/YesOrNot';
+import { Link } from "react-router-dom"
 
 // core components
 import styles from "assets/jss/material-dashboard-react/components/tableStyle.js";
@@ -215,14 +216,14 @@ export default function CustomTable(props) {
               </TableCell> : null}
               {editable &&
                 <TableCell className={classes.tableCell}>
-                  <a href={`${urlDetails}/${prop.id}`}>
+                  <Link to={`${urlDetails}/${prop.id}`}>
                     <IconButton
                       aria-label="details"
                       className={classes.margin}
                     >
                       <DetailsIcon fontSize="small" />
                     </IconButton>
-                  </a>
+                  </Link>
                   <IconButton
                     aria-label="edit"
                     className={classes.margin}
