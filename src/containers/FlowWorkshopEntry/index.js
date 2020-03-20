@@ -8,7 +8,7 @@ import StepButton from '@material-ui/core/StepButton';
 import FormClient from 'containers/FormClient';
 import FormHardware from 'containers/FormHardware';
 import FormEntry from 'containers/FormEntry';
-import FormService from 'containers/FormService'
+import FormService from 'containers/FormService';
 
 import CustomInput from "components/CustomInput/CustomInput.js";
 import { MenuItem } from "@material-ui/core";

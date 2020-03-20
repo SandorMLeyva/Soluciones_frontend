@@ -1,0 +1,10 @@
+.hoverNext{
+    background-color: rgba(0, 0, 0, 0.062);
+    cursor: pointer;
+    color: white;
+    width: 33.3%;
+}
+.hoverNext:hover{
+    background-color: rgba(0, 0, 0, 0.397);
+    animation-duration: 500;
+}

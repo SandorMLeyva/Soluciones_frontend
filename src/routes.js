@@ -30,7 +30,7 @@ import Icons from "views/Icons/Icons.js";
 import WorkshopEntry from "views/WorkshopEntry";
 import RoadEntry from "views/RoadEntry";
 import RoadEntryDetail from "views/RoadEntryDetails";
-import EntryDetail from "views/EntryDetails";
+import ServiceDetail from "views/ServiceDetails";
 import Services from "views/WorkshopService";
 // core components/views for RTL layout
 
@@ -57,7 +57,7 @@ export const navBar = [
     layout: "/"
   },
   {
-    path: "servicios",
+    path: "servicio",
     name: "Servicios",
     icon: "content_paste",
     component: Services,
@@ -96,12 +96,12 @@ export const navBar = [
 
 const routes = [
   {
-    path: "detalle/taller/:id",
-    component: EntryDetail,
+    path: "servicio/:id",
+    component: ServiceDetail,
     layout: "/"
   },
   {
-    path: "detalle/calle/:id",
+    path: "servicio/calle/:id",
     component: RoadEntryDetail,
     layout: "/"
   },

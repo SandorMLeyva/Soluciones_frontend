@@ -151,7 +151,7 @@ export default function Services() {
                             addForm={FlowWorkshopEntry}
                             // add={false}
                             onDeleteRow={handleDelete}
-                            urlDetails={"/detalle/servicio/taller"}
+                            urlDetails={"/servicio"}
                         />
                     </CardBody>
                 </Card>

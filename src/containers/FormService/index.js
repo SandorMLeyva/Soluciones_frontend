@@ -29,7 +29,7 @@ const styles = {
 };
 
 const FormService = (props) => {
-    const { update, onSave, onCancel, autoClean } = props;
+    const { update, onSave, onCancel, autoClean, header } = props;
 
     const [user, setUser] = useState("");
     const [entry, setEntry] = useState("");
@@ -72,7 +72,7 @@ const FormService = (props) => {
 
 
     const handleClickGuardar = () => {
-        let xx = state !== "UPEN"? state : user ? "APEN" : "UPEN";
+        let xx = state !== "UPEN" ? state : user ? "APEN" : "UPEN";
         handleMutation({
             variables: {
                 entryId: entry,
@@ -95,9 +95,12 @@ const FormService = (props) => {
 
     return (
         <Card>
-            <CardHeader color="primary">
-                <h4 className={styles.cardTitleWhite}>Agregar Servicio</h4>
-            </CardHeader>
+            {header ?
+                <CardHeader color="primary">
+                    <h4 className={styles.cardTitleWhite}>Agregar Servicio</h4>
+                </CardHeader> : null
+            }
+
             <CardBody>
                 <GridContainer>
 
@@ -153,9 +156,11 @@ const FormService = (props) => {
 
 FormService.propTypes = {
     update: PropTypes.object,
+    header: PropTypes.bool
 };
 FormService.defaultProps = {
-    update: false
+    update: false,
+    header: true
 };
 
 export default FormService;
