@@ -8,6 +8,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import Divider from '@material-ui/core/Divider';
 import { COOLORS, TEXTS, NEXT_TEXTS, PREV_TEXTS } from "helpers";
 import FormService from 'containers/FormService';
+import FormFix from 'containers/FormFix';
 import RegularButton from "components/CustomButtons/Button";
 import FlowWorkshopEntry from "containers/FlowWorkshopEntry";
 import Dialog from 'components/Dialog';
@@ -60,10 +61,13 @@ export default function ServiceDetail(props) {
 
     const [showForm, setShowForm] = React.useState(false);
     const [openDialog, setOpenDialog] = React.useState(false);
+    const [openDialogFix, setOpenDialogFix] = React.useState(false);
 
     const handleCloseDialog = () => setOpenDialog(false);
     const handleOpenDialog = () => setOpenDialog(true);
-
+    
+    const handleCloseDialogFix = () => setOpenDialogFix(false);
+    const handleOpenDialogFix = () => setOpenDialogFix(true);
 
 
 
@@ -86,12 +90,12 @@ export default function ServiceDetail(props) {
                 </Fab>
             </div>
             <div style={{ position: 'absolute', top: '23vh', right: '12vw', zIndex: '1' }}>
-                <Fab color="primary" aria-label="edit" onClick={handleOpenDialog}>
+                <Fab color="primary" aria-label="edit" onClick={handleOpenDialogFix}>
                     <BuildIcon />
                 </Fab>
             </div>
             <List className={classes.root}>
-                <div style={{ display: '-webkit-flex', display: 'flex', justifyContent: 'space-between', backgroundColor: COOLORS[service.state], textAlign: 'center', marginTop: '-29px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', backgroundColor: COOLORS[service.state], textAlign: 'center', marginTop: '-29px' }}>
                     {service.state !== "UPEN" ? <div className={'hoverNext'} onClick={prevState} style={{ color: 'white', heigth: '100%' }}><h5>{TEXTS[PREV_TEXTS[service.state]]}</h5></div> : <div style={{ width: '33.3%' }}></div>}
                     <div style={{ color: 'white', width: "33%" }}><h3>{TEXTS[service.state]}</h3></div>
                     {service.state !== "WARR" ? <div className={'hoverNext'} onClick={nextState} style={{ color: 'white', heigth: '100%' }}><h5>{TEXTS[NEXT_TEXTS[service.state]]}</h5></div> : <div style={{ width: '33.3%' }}></div>}
@@ -168,6 +172,17 @@ export default function ServiceDetail(props) {
                 handleClose={handleCloseDialog}
                 childProps={{
                     onFinish: handleCloseDialog,
+                    update: { id: id }
+                }}
+            />
+             <Dialog
+                fullscreen={true}
+                open={openDialogFix}
+                onClose={handleCloseDialogFix}
+                ChildComponent={FormFix}
+                handleClose={handleCloseDialogFix}
+                childProps={{
+                    onFinish: handleCloseDialogFix,
                     update: { id: id }
                 }}
             />

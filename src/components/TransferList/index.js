@@ -27,7 +27,7 @@ const useStyles = makeStyles(theme => ({
 
 
 export default function TransferList(props) {
-    const { values } = props;
+    const { values, onChange } = props;
     const classes = useStyles();
     const [left, setLeft] = React.useState(values);
     const [right, setRight] = React.useState([]);
@@ -113,7 +113,8 @@ TransferList.propTypes = {
         id: PropTypes.number,
         name: PropTypes.string,
         count: PropTypes.number
-    }))
+    })),
+    onChange: PropTypes.func
 };
 TransferList.defaultProps = {
     values: []

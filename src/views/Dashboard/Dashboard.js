@@ -17,43 +17,43 @@
 
 // export default function Dashboard() {
 //   return (
-//     <div>
-//       <GridContainer>
-//         <GridItem xs={12} sm={12} md={4}>
-//           <Card chart>
-//             <CardHeader color="success">
-//             </CardHeader>
-//             <CardBody>
-//               <Chart doughnut x={[1, 2, 3, 4]} y={['sand', 'mar', 'tin', 'ley']} />
-//             </CardBody>
-//           </Card>
-//         </GridItem>
-//         <GridItem xs={12} sm={12} md={4}>
-//           <Card chart>
-//             <CardHeader color="warning">
-//             </CardHeader>
-//             <CardBody>
-//               <Chart poly x={[1, 2, 3, 4]} y={['sand', 'mar', 'tin', 'ley']} />
-//             </CardBody>
-//           </Card>
-//         </GridItem>
-//         <GridItem xs={12} sm={12} md={4}>
-//           <Card chart>
-//             <CardHeader color="danger">
-//             </CardHeader>
-//             <CardBody>
-//               <Chart bar x={[1, 2, 3, 4]} y={['sand', 'mar', 'tin', 'ley']} />
-//             </CardBody>
-//           </Card>
-//         </GridItem>
-//       </GridContainer>
-//       <Chip color="secondary" label="25 Servicios sin asignar" clickable href="#chip" />
-//       <Chip color="primary" label="12 Servicios Asignados" clickable href="#chip" />
-//       <Chip color="default" label="15 Servicios en proceso" clickable href="#chip" />
+// <div>
+//   <GridContainer>
+//     <GridItem xs={12} sm={12} md={4}>
+//       <Card chart>
+//         <CardHeader color="success">
+//         </CardHeader>
+//         <CardBody>
+//           <Chart doughnut x={[1, 2, 3, 4]} y={['sand', 'mar', 'tin', 'ley']} />
+//         </CardBody>
+//       </Card>
+//     </GridItem>
+//     <GridItem xs={12} sm={12} md={4}>
+//       <Card chart>
+//         <CardHeader color="warning">
+//         </CardHeader>
+//         <CardBody>
+//           <Chart poly x={[1, 2, 3, 4]} y={['sand', 'mar', 'tin', 'ley']} />
+//         </CardBody>
+//       </Card>
+//     </GridItem>
+//     <GridItem xs={12} sm={12} md={4}>
+//       <Card chart>
+//         <CardHeader color="danger">
+//         </CardHeader>
+//         <CardBody>
+//           <Chart bar x={[1, 2, 3, 4]} y={['sand', 'mar', 'tin', 'ley']} />
+//         </CardBody>
+//       </Card>
+//     </GridItem>
+//   </GridContainer>
+//   <Chip color="secondary" label="25 Servicios sin asignar" clickable href="#chip" />
+//   <Chip color="primary" label="12 Servicios Asignados" clickable href="#chip" />
+//   <Chip color="default" label="15 Servicios en proceso" clickable href="#chip" />
 
 
 
-//     </div>
+// </div>
 //   );
 // }
 import React from "react";
@@ -88,6 +88,7 @@ import CardBody from "components/Card/CardBody.js";
 import CardFooter from "components/Card/CardFooter.js";
 import { GET_COUNT_SERVICE } from "Query";
 import { useQuery } from "@apollo/react-hooks";
+import Chart from "components/Charts";
 
 
 import { bugs, website, server } from "variables/general.js";
@@ -182,6 +183,38 @@ export default function Dashboard() {
           </Card>
         </GridItem>
       </GridContainer>
+      <div>
+        <GridContainer>
+          <GridItem xs={12} sm={12} md={4}>
+            <Card chart>
+              <CardHeader color="success">
+              </CardHeader>
+              <CardBody>
+                <Chart doughnut x={[1, 2, 3, 4]} y={['sand', 'mar', 'tin', 'ley']} />
+              </CardBody>
+            </Card>
+          </GridItem>
+          <GridItem xs={12} sm={12} md={4}>
+            <Card chart>
+              <CardHeader color="warning">
+              </CardHeader>
+              <CardBody>
+                <Chart poly x={[1, 2, 3, 4]} y={['sand', 'mar', 'tin', 'ley']} />
+              </CardBody>
+            </Card>
+          </GridItem>
+          <GridItem xs={12} sm={12} md={4}>
+            <Card chart>
+              <CardHeader color="danger">
+              </CardHeader>
+              <CardBody>
+                <Chart bar x={[1, 2, 3, 4]} y={['sand', 'mar', 'tin', 'ley']} />
+              </CardBody>
+            </Card>
+          </GridItem>
+        </GridContainer>
+
+      </div>
       <GridContainer>
         <GridItem xs={12} sm={12} md={4}>
           <Card chart>
