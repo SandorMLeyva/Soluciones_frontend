@@ -86,6 +86,9 @@ import CardHeader from "components/Card/CardHeader.js";
 import CardIcon from "components/Card/CardIcon.js";
 import CardBody from "components/Card/CardBody.js";
 import CardFooter from "components/Card/CardFooter.js";
+import { GET_COUNT_SERVICE } from "Query";
+import { useQuery } from "@apollo/react-hooks";
+
 
 import { bugs, website, server } from "variables/general.js";
 
@@ -101,17 +104,59 @@ const useStyles = makeStyles(styles);
 
 export default function Dashboard() {
   const classes = useStyles();
+
+  const upen = useQuery(GET_COUNT_SERVICE, {
+    variables: { state: "UPEN" }
+  });
+
+  const apen = useQuery(GET_COUNT_SERVICE, {
+    variables: { state: "APEN" }
+  });
+
+  const proc = useQuery(GET_COUNT_SERVICE, {
+    variables: { state: "PROC" }
+  });
+
+  let fin = useQuery(GET_COUNT_SERVICE, {
+    variables: { state: "FIN" }
+  });
+  if (upen.loading) return <p>Loading...</p>;
+  if (upen.error) return <p>No se encontro esta entrada</p>;
+  const UPEN = upen.data.servicesCount.count;
+  if (apen.loading) return <p>Loading...</p>;
+  if (apen.error) return <p>No se encontro esta entrada</p>;
+  const APEN = apen.data.servicesCount.count;
+  if (proc.loading) return <p>Loading...</p>;
+  if (proc.error) return <p>No se encontro esta entrada</p>;
+  const PROC = proc.data.servicesCount.count;
+  if (fin.loading) return <p>Loading...</p>;
+  if (fin.error) return <p>No se encontro esta entrada</p>;
+  const FIN = fin.data.servicesCount.count;
+
+
   return (
     <div>
       <GridContainer>
         <GridItem xs={12} sm={6} md={3}>
           <Card>
-            <CardHeader color="warning" stats icon>
-              <CardIcon color="warning">
+            <CardHeader color="danger " stats icon>
+              <CardIcon color="danger">
                 <h5>Servicios sin asignar</h5>
               </CardIcon>
               <h3 className={classes.cardTitle}>
-                49
+                {UPEN}
+              </h3>
+            </CardHeader>
+          </Card>
+        </GridItem>
+        <GridItem xs={12} sm={6} md={3}>
+          <Card>
+            <CardHeader color="warning" stats icon>
+              <CardIcon color="warning">
+                <h4>Servicios asignados</h4>
+              </CardIcon>
+              <h3 className={classes.cardTitle}>
+                {APEN}
               </h3>
             </CardHeader>
           </Card>
@@ -120,19 +165,9 @@ export default function Dashboard() {
           <Card>
             <CardHeader color="success" stats icon>
               <CardIcon color="success">
-                <h4>Servicios asignados</h4>
+                <h5>Servicios en proceso</h5>
               </CardIcon>
-              <h3 className={classes.cardTitle}>34</h3>
-            </CardHeader>
-          </Card>
-        </GridItem>
-        <GridItem xs={12} sm={6} md={3}>
-          <Card>
-            <CardHeader color="danger" stats icon>
-              <CardIcon color="danger">
-              <h5>Servicios en proceso</h5>
-              </CardIcon>
-              <h3 className={classes.cardTitle}>75</h3>
+              <h3 className={classes.cardTitle}>{PROC}</h3>
             </CardHeader>
           </Card>
         </GridItem>
@@ -140,9 +175,9 @@ export default function Dashboard() {
           <Card>
             <CardHeader color="info" stats icon>
               <CardIcon color="info">
-              <h5>Servicios finalizados</h5>
+                <h5>Servicios finalizados</h5>
               </CardIcon>
-              <h3 className={classes.cardTitle}>245</h3>
+              <h3 className={classes.cardTitle}>{FIN}</h3>
             </CardHeader>
           </Card>
         </GridItem>

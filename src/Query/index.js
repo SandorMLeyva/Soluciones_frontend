@@ -494,3 +494,12 @@ export const DELETE_SERVICE = gql`
     }
   }
 `;
+
+export const GET_COUNT_SERVICE = gql`
+  query ServicesCount($state: String, $time: String){
+    servicesCount(state: $state, time: $time){
+      count
+    }
+  }
+
+`;

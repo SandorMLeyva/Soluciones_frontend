@@ -3,10 +3,10 @@ export function getRndInteger(min, max) {
 }
 
 export const COOLORS = {
-    'UPEN': '#EA4335', 
-    'APEN': '#4285F4',
-    'PROC': '#FBBC05',
-    'FIN': '#34A853',
+    'UPEN': '#e63c38', 
+    'APEN': '#fb8e03',
+    'PROC': '#47a34b',
+    'FIN': '#04aec3',
     'WARR': '#66757F',
     'NO_WARR': '#FFFFFF'
 };
