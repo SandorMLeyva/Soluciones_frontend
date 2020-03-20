@@ -1,7 +1,7 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { useQuery } from "@apollo/react-hooks";
-import { GET_SERVICE_BY_ID } from "Query";
+import { useQuery, useMutation } from "@apollo/react-hooks";
+import { GET_SERVICE_BY_ID, SET_STATE_SERVICE } from "Query";
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
@@ -36,8 +36,27 @@ const useStyles = makeStyles(theme => ({
 
 
 export default function ServiceDetail(props) {
+    const [handleMutation] = useMutation(SET_STATE_SERVICE);
     const classes = useStyles();
     const { match: { params: { id } } } = props;
+
+
+    const nextState = () => {
+        handleMutation({
+            variables: {
+                setPrevious: false,
+                serviceId: id
+            }
+        });
+    };
+    const prevState = () => {
+        handleMutation({
+            variables: {
+                setPrevious: true,
+                serviceId: id
+            }
+        });
+    };
 
     const [showForm, setShowForm] = React.useState(false);
     const [openDialog, setOpenDialog] = React.useState(false);
@@ -46,11 +65,16 @@ export default function ServiceDetail(props) {
     const handleOpenDialog = () => setOpenDialog(true);
 
 
+
+
+
     const { loading, error, data } = useQuery(GET_SERVICE_BY_ID, {
         variables: { id: id }
     });
     if (loading) return <p>Loading...</p>;
     if (error) return <p>No se encontro esta entrada</p>;
+
+
 
     const { service } = data;
 
@@ -68,9 +92,9 @@ export default function ServiceDetail(props) {
             </div>
             <List className={classes.root}>
                 <div style={{ display: '-webkit-flex', display: 'flex', justifyContent: 'space-between', backgroundColor: COOLORS[service.state], textAlign: 'center', marginTop: '-29px' }}>
-                    {service.state !== "UPEN" ? <div className={'hoverNext'} style={{ color: 'white', heigth: '100%' }}><h5>{TEXTS[PREV_TEXTS[service.state]]}</h5></div> : <div style={{ width: '33.3%' }}></div>}
+                    {service.state !== "UPEN" ? <div className={'hoverNext'} onClick={prevState} style={{ color: 'white', heigth: '100%' }}><h5>{TEXTS[PREV_TEXTS[service.state]]}</h5></div> : <div style={{ width: '33.3%' }}></div>}
                     <div style={{ color: 'white', width: "33%" }}><h3>{TEXTS[service.state]}</h3></div>
-                    {service.state !== "WARR" ? <div className={'hoverNext'} style={{ color: 'white', heigth: '100%' }}><h5>{TEXTS[NEXT_TEXTS[service.state]]}</h5></div> : <div style={{ width: '33.3%' }}></div>}
+                    {service.state !== "WARR" ? <div className={'hoverNext'} onClick={nextState} style={{ color: 'white', heigth: '100%' }}><h5>{TEXTS[NEXT_TEXTS[service.state]]}</h5></div> : <div style={{ width: '33.3%' }}></div>}
                 </div>
                 <ListItem>
                     <ListItemText primary={service.entry.client.name} secondary={service.entry.phoneNumber} />
@@ -129,7 +153,7 @@ export default function ServiceDetail(props) {
                     )
                 }
                 +++++++            Falta crear arreglos de un servicio  +++++++++++++
-            
+
                 <Divider component="li" variant="inset" />
                 <ListItem>
                     <ListItemText primary={"Sello"} secondary={service.sealNumber} />
