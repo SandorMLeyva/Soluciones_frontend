@@ -1,4 +1,4 @@
-import React, { Component, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 // @material-ui/core components
 import { MenuItem } from "@material-ui/core"
 // core components
@@ -12,6 +12,9 @@ import CardBody from "components/Card/CardBody.js";
 import CardFooter from "components/Card/CardFooter.js";
 import TransferList from "components/TransferList";
 import PropTypes from "prop-types";
+import { GET_PIECES, GET_OTHER_PIECES } from "Query";
+import { useQuery } from "@apollo/react-hooks";
+
 
 
 const styles = {
@@ -26,104 +29,91 @@ const styles = {
     }
 };
 
-
-export default class FormFix extends Component {
-
-    constructor(props) {
-        super(props);
-        const { update } = props;
-        if (update) {
-            this.state = {
-                price: update.price,
-                phone: update.phone,
-                staffNotes: update.staffNotes
-            }
-
+const Pieces = (props) => {
+    const { loading, error, data } = useQuery(GET_PIECES);
+    if (loading) return <p>Loading...</p>;
+    if (error) return <p>Error cargando las piezas del almacen</p>;
+    return (<TransferList values={data.pieces.map(item => (
+        {
+            id: Number.parseInt(item.id),
+            name: `${item.name} ${item.model}`,
+            count: item.count
         }
-        else {
-            this.state = {
-                price: "",
-                phone: "",
-                staffNotes: ""
-            }
+    ))} />);
+};
+
+const OtherPieces = () => {
+    const { loading, error, data } = useQuery(GET_OTHER_PIECES);
+    if (loading) return <p>Loading...</p>;
+    if (error) return <p>Error cargando las piezas del almacen</p>;
+    return (<TransferList values={data.otherpieces.map(item => (
+        {
+            id: Number.parseInt(item.id),
+            name: `${item.name}`,
+            count: item.count
         }
+    ))} />);
+};
 
-        this.handlePrice = this.handlePrice.bind(this);
-        this.handlePhone = this.handlePhone.bind(this);
-        this.handleStaffNotes = this.handleStaffNotes.bind(this);
-    }
-
-    handleStaffNotes(staffNotes) {
-        this.setState({
-            staffNotes: staffNotes
-        })
-    }
+const FormFix = (props) => {
+    const { update, onSave } = props;
+    const [price, setPrice] = useState(0);
 
 
 
-    handlePhone(phone) {
-        this.setState({
-            phone: phone
-        })
-    }
-
-    handlePrice(price) {
-        this.setState({
-            price: price
-        })
-    }
-
-
-    render() {
-        return (
-            <Card>
-                <CardHeader color="primary">
-                    <h4 className={styles.cardTitleWhite}>Agregar Arreglo</h4>
-                </CardHeader>
-                <CardBody>
-                    <GridContainer>
-                        <GridItem xs={12} sm={12} md={6}>
-                            <CustomInput
-                                labelText="Precio Base"
-                                id="price"
-                                formControlProps={{
-                                    fullWidth: true
-                                }}
-                                inputProps={{
-                                    value: this.state.price,
-                                    onChange: (e) => this.handlePrice(e.target.value),
-                                    type: "number"
-                                }}
-                            />
-                        </GridItem>
-                    </GridContainer>
-                    <GridContainer>
-                        <GridItem xs={12} sm={12} md={12}>
-                            <TransferList />
-                        </GridItem>
-                    </GridContainer>
-                    <GridContainer>
-                        <GridItem xs={12} sm={12} md={12}>
-                            <TransferList />
-                        </GridItem>
-                    </GridContainer>
-                </CardBody>
-                <CardFooter>
-                    <Button color="primary">Guardar</Button>
-                </CardFooter>
-            </Card>
-        );
-    }
+    return (
+        <Card>
+            <CardHeader color="primary">
+                <h4 className={styles.cardTitleWhite}>Agregar Arreglo</h4>
+            </CardHeader>
+            <CardBody>
+                <GridContainer>
+                    <GridItem xs={12} sm={12} md={6}>
+                        <CustomInput
+                            labelText="Precio Base"
+                            id="price"
+                            formControlProps={{
+                                fullWidth: true
+                            }}
+                            inputProps={{
+                                value: price,
+                                onChange: (e) => setPrice(Number.parseFloat(e.target.value)),
+                                type: "number"
+                            }}
+                        />
+                    </GridItem>
+                </GridContainer>
+                <GridContainer>
+                    <GridItem xs={12} sm={12} md={12}>
+                        <Pieces />
+                    </GridItem>
+                </GridContainer>
+                <GridContainer>
+                    <GridItem xs={12} sm={12} md={12}>
+                        <OtherPieces />
+                    </GridItem>
+                </GridContainer>
+            </CardBody>
+            <CardFooter>
+                <Button color="primary" onClick={() => {
+                    onSave();
+                }}>Guardar</Button>
+            </CardFooter>
+        </Card>
+    );
 }
+
 
 FormFix.propTypes = {
     update: PropTypes.object,
+    onSave: PropTypes.func
 };
 FormFix.defaultProps = {
-    update: false
+    update: false,
+    onSave: () => console.log("No tiene implementado metodo onSave")
 };
 
 
 
-
+export default FormFix;
 
