@@ -514,3 +514,50 @@ export const SET_STATE_SERVICE = gql`
       }
     }
 `;
+
+
+
+export const CREATE_FIX = gql`
+    mutation CreateFix($pieces: [String]!, $basePrice: Float!,$otherPieces:[String]!){
+      createFix(pieces: $pieces, basePrice: $basePrice, otherPieces: $otherPieces){
+        ok
+        fix{
+          id
+          basePrice
+          pieces{
+            id
+          }
+          otherPieces{
+            id
+          }
+        }
+      }
+    }
+`;
+
+
+export const GET_PIECES = gql`
+  query{
+    pieces{
+      id
+      name
+      model
+      price
+      count
+      minCount
+    }
+  }
+`;
+
+export const GET_OTHER_PIECES = gql`
+  query{
+    otherpieces{
+      id
+      name
+      price
+      count    
+    }
+  }
+`;
+
+
